@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>../strbuf.h</title>
+<link rel="stylesheet" type="text/css" href="cppdoc.css" />
+</head>
+<body>
+<pre class=code>
+<scan class=comment>/*
+ * File: strbuf.h
+ * --------------
+ * This interface defines a class that allows strings to grow by
+ * concatentation.
+ */
+</scan>
+#ifndef _strbuf_h
+#define _strbuf_h
+
+#include "cslib.h"
+
+<a name="Type:StringBuffer"><scan class=comment>/*
+ * Type: StringBuffer
+ * ------------------
+ * This type provides an efficient, memory-safe mechanism for strings that
+ * grow by the addition of characters.
+ */
+</scan>
+typedef struct StringBufferCDT *StringBuffer;
+
+<a name="Function:newStringBuffer"><scan class=comment>/*
+ * Function: newStringBuffer
+ * Usage: sb = newStringBuffer();
+ * ------------------------------
+ * Creates a new string buffer that expands dynamically if needed.  The
+ * buffer is initially empty.
+ */
+</scan>
+StringBuffer newStringBuffer();
+
+<a name="Function:freeStringBuffer"><scan class=comment>/*
+ * Function: freeStringBuffer
+ * Usage: freeStringBuffer(sb);
+ * ----------------------------
+ * Frees the storage associated with the string buffer.
+ */
+</scan>
+void freeStringBuffer(StringBuffer sb);
+
+<a name="Function:pushChar"><scan class=comment>/*
+ * Function: pushChar
+ * Usage: pushChar(sb, ch);
+ * ------------------------
+ * Appends (pushes) the character ch onto the end of the string buffer.
+ */
+</scan>
+void pushChar(StringBuffer sb, char ch);
+
+<a name="Function:popChar"><scan class=comment>/*
+ * Function: popChar
+ * Usage: ch = popChar(sb);
+ * ------------------------
+ * Pops and removes the last character from the string buffer.
+ */
+</scan>
+char popChar(StringBuffer sb);
+
+<a name="Function:appendString"><scan class=comment>/*
+ * Function: appendString
+ * Usage: appendString(sb, str);
+ * -----------------------------
+ * Appends the string str to the end of the string buffer.
+ */
+</scan>
+void appendString(StringBuffer sb, string str);
+
+<a name="Function:sbprintf"><scan class=comment>/*
+ * Function: sbprintf
+ * Usage: sbprintf(sb, format, ...);
+ * ---------------------------------
+ * Expands a printf-style format string and arguments onto the end of the
+ * string buffer.
+ */
+</scan>
+void sbprintf(StringBuffer sb, string format, ...);
+
+<a name="Function:isEmpty"><scan class=comment>/*
+ * Function: isEmpty
+ * Usage: if (isEmpty(sb)) . . .
+ * -----------------------------
+ * Returns true if the string buffer is empty.
+ */
+</scan>
+bool isEmptyStringBuffer(StringBuffer vec);
+
+<a name="Function:size"><scan class=comment>/*
+ * Function: size
+ * Usage: n = size(sb);
+ * --------------------
+ * Returns the number of characters in the string buffer.
+ */
+</scan>
+int sizeStringBuffer(StringBuffer vector);
+
+<a name="Function:clear"><scan class=comment>/*
+ * Function: clear
+ * Usage: clear(sb);
+ * -----------------
+ * Removes all characters from the string buffer.
+ */
+</scan>
+void clearStringBuffer(StringBuffer sb);
+
+<a name="Function:getString"><scan class=comment>/*
+ * Function: getString
+ * Usage: str = getString(sb);
+ * ---------------------------
+ * Returns the string stored inside the buffer.  Clients must copy this
+ * string if they need to retain it.
+ */
+</scan>
+string getString(StringBuffer sb);
+
+<a name="Friend function:printfCapacity"><scan class=comment>/*
+ * Friend function: printfCapacity
+ * Usage: capacity = printfCapacity(format, args);
+ * -----------------------------------------------
+ * Returns a character count that will be sufficient to hold the result of
+ * printing format with arguments substituted from the args list.  This
+ * bound is guaranteed to be adequate but is not necessarily tight.
+ */
+</scan>
+int printfCapacity(string format, va_list args);
+
+<a name="Friend function:sbFormat"><scan class=comment>/*
+ * Friend function: sbFormat
+ * Usage: sbFormat(sb, capacity, format, list);
+ * --------------------------------------------
+ * Works like sbprintf except that the list is an argument list as in
+ * stdarg.h.  The capacity argument is the required capacity, as returned
+ * by printfCapacity.
+ */
+</scan>
+void sbFormat(StringBuffer sb, int capacity, string format, va_list args);
+
+#endif
+</pre>
+</body>
+</html>

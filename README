@@ -1,0 +1,18 @@
+README file for StanfordCSLib package
+Last modified on Thu Aug  8 15:32:06 2013 by eroberts
+-----------------------------------------------------
+This directory contains an early beta version of the Stanford Portable
+Library (SPL) implemented for use with C.  The subdirectories have the
+following contents:
+
+   doc/       The HTML documentation for the package
+   examples/  Several examples illustrating the use of SPL graphics
+   include/   The header files (all compilations need a path to these)
+   lib/       The output location of the libcs.a archive
+   license/   The GNU Public License under which this code is distributed
+   obj/       The object files
+   java/      The code for the Java back end
+   src/       The C sources
+
+The cstest program produced by the Makefile tests the non-graphics code.
+

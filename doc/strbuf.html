@@ -1,0 +1,173 @@
+<html>
+<head>
+<title>strbuf.h</title>
+<link rel="stylesheet" type="text/css" href="cppdoc.css" />
+</head>
+<body>
+<table class=banner>
+<tr>
+<td valign=middle><image src="images/StanfordTreeLogo.png" height=32></td>
+<td valign=middle><div class=bannerText>
+The Stanford <code>cslib</code> package
+</div></td>
+</tr></table>
+<hr>
+<h1 class=header><a href="strbuf-h.html"><code>strbuf.h</code></a></h1>
+This interface defines a class that allows strings to grow by
+concatentation.
+<table class=index width=100%>
+<tr><td class=indexHead colspan=2>Type</td></tr>
+<tr><td class=indexKey><nobr><a href="#Type:StringBuffer">StringBuffer</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>This type provides an efficient, memory-safe mechanism for strings that grow by the addition of characters.</td></tr>
+<tr><td class=indexHead colspan=2>Functions</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:newStringBuffer">newStringBuffer()</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Creates a new string buffer that expands dynamically if needed.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:freeStringBuffer">freeStringBuffer(sb)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Frees the storage associated with the string buffer.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:pushChar">pushChar(sb,&nbsp;ch)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Appends (pushes) the character <code>ch</code> onto the end of the string buffer.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:popChar">popChar(sb)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Pops and removes the last character from the string buffer.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:appendString">appendString(sb,&nbsp;str)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Appends the string <code>str</code> to the end of the string buffer.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:sbprintf">sbprintf(sb,&nbsp;format,&nbsp;...)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Expands a <code>printf</code>-style format string and arguments onto the end of the string buffer.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:isEmpty">isEmpty(sb)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns <code>true</code> if the string buffer is empty.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:size">size(sb)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the number of characters in the string buffer.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:clear">clear(sb)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Removes all characters from the string buffer.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:getString">getString(sb)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the string stored inside the buffer.</td></tr>
+</table>
+<h2>Type detail</h2>
+<hr>
+<a name="Type:StringBuffer"></a>
+<pre class=detailCode>
+typedef struct StringBufferCDT *StringBuffer;
+</pre>
+<div class=detailHTML>
+This type provides an efficient, memory-safe mechanism for strings
+that grow by the addition of characters.
+</div>
+<hr>
+</table>
+<h2>Function detail</h2>
+<hr>
+<a name="Function:newStringBuffer"></a>
+<pre class=detailCode>
+StringBuffer newStringBuffer();
+</pre>
+<div class=detailHTML>
+Creates a new string buffer that expands dynamically if needed.
+The buffer is initially empty.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+sb = newStringBuffer();
+</pre>
+<hr>
+<a name="Function:freeStringBuffer"></a>
+<pre class=detailCode>
+void freeStringBuffer(StringBuffer sb);
+</pre>
+<div class=detailHTML>
+Frees the storage associated with the string buffer.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+freeStringBuffer(sb);
+</pre>
+<hr>
+<a name="Function:pushChar"></a>
+<pre class=detailCode>
+void pushChar(StringBuffer sb, char ch);
+</pre>
+<div class=detailHTML>
+Appends (pushes) the character <code>ch</code> onto the end of the
+string buffer.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+pushChar(sb, ch);
+</pre>
+<hr>
+<a name="Function:popChar"></a>
+<pre class=detailCode>
+char popChar(StringBuffer sb);
+</pre>
+<div class=detailHTML>
+Pops and removes the last character from the string buffer.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+ch = popChar(sb);
+</pre>
+<hr>
+<a name="Function:appendString"></a>
+<pre class=detailCode>
+void appendString(StringBuffer sb, string str);
+</pre>
+<div class=detailHTML>
+Appends the string <code>str</code> to the end of the string buffer.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+appendString(sb, str);
+</pre>
+<hr>
+<a name="Function:sbprintf"></a>
+<pre class=detailCode>
+void sbprintf(StringBuffer sb, string format, ...);
+</pre>
+<div class=detailHTML>
+Expands a <code>printf</code>-style format string and arguments onto
+the end of the string buffer.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+sbprintf(sb, format, ...);
+</pre>
+<hr>
+<a name="Function:isEmpty"></a>
+<pre class=detailCode>
+bool isEmpty(StringBuffer vec);
+</pre>
+<div class=detailHTML>
+Returns <code>true</code> if the string buffer is empty.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+if (isEmpty(sb)) . . .
+</pre>
+<hr>
+<a name="Function:size"></a>
+<pre class=detailCode>
+int size(StringBuffer vector);
+</pre>
+<div class=detailHTML>
+Returns the number of characters in the string buffer.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+n = size(sb);
+</pre>
+<hr>
+<a name="Function:clear"></a>
+<pre class=detailCode>
+void clear(StringBuffer sb);
+</pre>
+<div class=detailHTML>
+Removes all characters from the string buffer.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+clear(sb);
+</pre>
+<hr>
+<a name="Function:getString"></a>
+<pre class=detailCode>
+string getString(StringBuffer sb);
+</pre>
+<div class=detailHTML>
+Returns the string stored inside the buffer.  Clients must copy this
+string if they need to retain it.
+<p>Usage:<br>
+</div>
+<pre class=usageCode>
+str = getString(sb);
+</pre>
+<hr>
+</table>
+</body>
+</html>
