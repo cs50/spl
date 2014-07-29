@@ -1,7 +1,6 @@
 2014-07-29  Rob Bowden  <rob@cs.harvard.edu>
 
-    * various files: rename "pause" to "hold" everywhere, to remove conflict
-    with unistd.h's pause
+    * src/platform.c (initpipe): use CLASSPATH if present to locate spl.jar
 
     * examples/Makefile: add -lm flag to remove undefined reference errors
 

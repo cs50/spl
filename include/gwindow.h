@@ -350,13 +350,13 @@ GObject getGObjectAt(GWindow gw, double x, double y);
 void setRegionAlignment(GWindow gw, string region, string align);
 
 /*
- * Function: hold
- * Usage: hold(milliseconds);
+ * Function: pause
+ * Usage: pause(milliseconds);
  * ---------------------------
  * Pauses for the indicated number of milliseconds.  This function is
  * useful for animation where the motion would otherwise be too fast.
  */
 
-void hold(double milliseconds);
+void pause(double milliseconds);
 
 #endif

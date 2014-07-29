@@ -125,7 +125,7 @@ public abstract class JBECommand {
       cmdTable.put("GChooser.setSelectedItem", new GChooser_setSelectedItem());
       cmdTable.put("GTimer.create", new GTimer_create());
       cmdTable.put("GTimer.deleteTimer", new GTimer_deleteTimer());
-      cmdTable.put("GTimer.hold", new GTimer_hold());
+      cmdTable.put("GTimer.pause", new GTimer_pause());
       cmdTable.put("GTimer.startTimer", new GTimer_startTimer());
       cmdTable.put("GTimer.stopTimer", new GTimer_stopTimer());
       cmdTable.put("GWindow.addToRegion", new GWindow_addToRegion());
@@ -297,7 +297,7 @@ class GWindow_setVisible extends JBECommand {
    }
 }
 
-class GTimer_hold extends JBECommand {
+class GTimer_pause extends JBECommand {
    public void execute(TokenScanner scanner, JavaBackEnd jbe) {
       scanner.verifyToken("(");
       double milliseconds = nextDouble(scanner);

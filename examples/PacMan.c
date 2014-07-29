@@ -35,7 +35,7 @@
 /* Constants */
 
 const double PACMAN_SIZE = 60;
-const double HOLD_TIME = 20;
+const double PAUSE_TIME = 20;
 const double DELTA_X = 2;
 const int DELTA_THETA = 5;
 
@@ -61,7 +61,7 @@ int main() {
       if (angle == 0 || angle == 45) sign = -sign;
       setStartAngle(pacman, angle);
       setSweepAngle(pacman, 360 - 2 * angle);
-      hold(HOLD_TIME);
+      pause(PAUSE_TIME);
    }
 
    return 0;

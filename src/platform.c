@@ -33,12 +33,14 @@
 #endif
 
 #if defined(__unix__) || defined(__STDC_HOSTED__)
+#  define pause unixpause
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #  include <dirent.h>
 #  include <errno.h>
 #  include <pwd.h>
 #  include <unistd.h>
+#  undef pause
 #endif
 
 #include <stdarg.h>
@@ -657,8 +659,8 @@ void stopTimerOp(GTimer timer) {
    putPipe("GTimer.stopTimer(\"0x%lX\")", (long) timer);
 }
 
-void holdOp(double milliseconds) {
-   putPipe("GTimer.hold(%g)", milliseconds);
+void pauseOp(double milliseconds) {
+   putPipe("GTimer.pause(%g)", milliseconds);
    getStatus();
 }
 

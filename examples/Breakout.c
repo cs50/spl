@@ -66,8 +66,8 @@
 /* Number of turns */
 #define NTURNS 3
 
-/* Hold time in milliseconds */
-#define HOLD_TIME 10.0
+/* pause time in milliseconds */
+#define PAUSE_TIME 10.0
 
 /* Delay between turns */
 #define TURN_DELAY 500.0
@@ -180,10 +180,10 @@ void playGame(GWindow gw) {
                   vy = -vy;
                }
             }
-            hold(HOLD_TIME);
+            pause(PAUSE_TIME);
          }
       }
-      hold(TURN_DELAY);
+      pause(TURN_DELAY);
       setLocation(ball, bx, by);
    }
    waitForClick();
