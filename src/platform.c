@@ -191,7 +191,12 @@ extern string *getMainArgArray(void);
 
 static void initPipe(void) {
    int toJBE[2], fromJBE[2], child;
-   string option;
+   string option, classpath;
+
+   classpath = getenv("CLASSPATH");
+   if (classpath == NULL) {
+      classpath = "./spl.jar";
+   }
 
    programName = getRoot(getTail(getMainArgArray()[0]));
    pipe(toJBE);
@@ -206,9 +211,9 @@ static void initPipe(void) {
       close(fromJBE[1]);
 #ifdef __APPLE__
       option = concat("-Xdock:name=", programName);
-      execlp("java", "java", option, "-jar", "spl.jar", programName, NULL);
+      execlp("java", "java", option, "-classpath", classpath, "stanford/spl/javaBackEnd", programName, NULL);
 #else
-      execlp("java", "java", "-jar", "spl.jar", programName, NULL);
+      execlp("java", "java", "-classpath", classpath, "stanford/spl/JavaBackEnd", programName, NULL);
 #endif
       error("Could not exec spl.jar");
    } else {
