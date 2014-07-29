@@ -12,6 +12,8 @@ PROGRAMS = \
     TestInteractors \
     USFlag
 
+FLAGS = -L../lib -lcs -lm
+
 
 # ***************************************************************
 # Entry to bring the package up to date
@@ -20,55 +22,55 @@ PROGRAMS = \
 all: $(PROGRAMS)
 
 Breakout: Breakout.o
-	gcc -o Breakout Breakout.o -L../lib -lcs
+	gcc -o Breakout Breakout.o $(FLAGS)
 
 Breakout.o: Breakout.c
 	gcc -c -I../include Breakout.c
 
 DrawLines: DrawLines.o
-	gcc -o DrawLines DrawLines.o -L../lib -lcs
+	gcc -o DrawLines DrawLines.o $(FLAGS)
 
 DrawLines.o: DrawLines.c
 	gcc -c -I../include DrawLines.c
 
 DrawRectangles: DrawRectangles.o
-	gcc -o DrawRectangles DrawRectangles.o -L../lib -lcs
+	gcc -o DrawRectangles DrawRectangles.o $(FLAGS)
 
 DrawRectangles.o: DrawRectangles.c
 	gcc -c -I../include DrawRectangles.c
 
 GHelloWorld: GHelloWorld.o
-	gcc -o GHelloWorld GHelloWorld.o -L../lib -lcs
+	gcc -o GHelloWorld GHelloWorld.o $(FLAGS)
 
 GHelloWorld.o: GHelloWorld.c
 	gcc -c -I../include GHelloWorld.c
 
 PacMan: PacMan.o
-	gcc -o PacMan PacMan.o -L../lib -lcs
+	gcc -o PacMan PacMan.o $(FLAGS)
 
 PacMan.o: PacMan.c
 	gcc -c -I../include PacMan.c
 
 StopSign: StopSign.o
-	gcc -o StopSign StopSign.o -L../lib -lcs
+	gcc -o StopSign StopSign.o $(FLAGS)
 
 StopSign.o: StopSign.c
 	gcc -c -I../include StopSign.c
 
 TestGraphics: TestGraphics.o
-	gcc -o TestGraphics TestGraphics.o -L../lib -lcs
+	gcc -o TestGraphics TestGraphics.o $(FLAGS)
 
 TestGraphics.o: TestGraphics.c
 	gcc -c -I../include TestGraphics.c
 
 TestInteractors: TestInteractors.o
-	gcc -o TestInteractors TestInteractors.o -L../lib -lcs
+	gcc -o TestInteractors TestInteractors.o $(FLAGS)
 
 TestInteractors.o: TestInteractors.c
 	gcc -c -I../include TestInteractors.c
 
 USFlag: USFlag.o
-	gcc -o USFlag USFlag.o -L../lib -lcs
+	gcc -o USFlag USFlag.o $(FLAGS)
 
 USFlag.o: USFlag.c
 	gcc -c -I../include USFlag.c
