@@ -1,1 +1,10 @@
 *.o
+Breakout
+DrawLines
+DrawRectangles
+GHelloWorld
+PacMan
+StopSign
+TestGraphics
+TestInteractors
+USFlag

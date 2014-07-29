@@ -176,7 +176,7 @@ static void initPipe() {
    sInfo.hStdOutput = wrFromJBE;
    sInfo.hStdError = wrFromJBE;
    if (!CreateProcessA(NULL, cmdLine, NULL, NULL, true, 0,
-                       NULL, NULL, &sInfo, &pInfo);
+                       NULL, NULL, &sInfo, &pInfo)) {
       DWORD err = GetLastError();
       error("CreateProcess failed with error %ld", (long) err);
    }
