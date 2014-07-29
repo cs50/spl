@@ -214,7 +214,7 @@ static void initPipe(void) {
       close(fromJBE[1]);
 #ifdef __APPLE__
       option = concat("-Xdock:name=", programName);
-      execlp("java", "java", option, "-classpath", classpath, "stanford/spl/javaBackEnd", programName, NULL);
+      execlp("java", "java", option, "-classpath", classpath, "stanford/spl/JavaBackEnd", programName, NULL);
 #else
       execlp("java", "java", "-classpath", classpath, "stanford/spl/JavaBackEnd", programName, NULL);
 #endif
