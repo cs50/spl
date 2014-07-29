@@ -63,4 +63,6 @@ int main() {
       setSweepAngle(pacman, 360 - 2 * angle);
       pause(PAUSE_TIME);
    }
+
+   return 0;
 }

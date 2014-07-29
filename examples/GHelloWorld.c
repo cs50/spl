@@ -27,7 +27,7 @@
 #include "gobjects.h"
 #include "gwindow.h"
 
-main() {
+int main() {
    GWindow gw;
    GLabel label;
    double x, y;
@@ -40,4 +40,6 @@ main() {
    y = (getHeight(gw) + getFontAscent(label)) / 2;
    setLocation(label, x, y);
    add(gw, label);
+
+   return 0;
 }

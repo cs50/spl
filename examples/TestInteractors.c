@@ -28,6 +28,7 @@
 #include "gevents.h"
 #include "ginteractors.h"
 #include "gwindow.h"
+#include "strlib.h"
 
 int main() {
    GWindow gw = newGWindow(800, 400);

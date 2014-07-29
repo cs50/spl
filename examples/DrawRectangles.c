@@ -32,7 +32,7 @@
 #include "gobjects.h"
 #include "gwindow.h"
 
-main() {
+int main() {
    GWindow gw = newGWindow(600, 400);
    GRect rect = NULL;
    bool dragging = false;

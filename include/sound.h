@@ -69,6 +69,6 @@ void freeSound(Sound sound);
  * for the sound to finish.
  */
 
-void play(Sound sound);
+void playSound(Sound sound);
 
 #endif

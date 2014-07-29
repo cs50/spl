@@ -27,7 +27,7 @@
 #include "gobjects.h"
 #include "gwindow.h"
 
-main() {
+int main() {
    double width, height;
    GWindow gw;
 
@@ -42,4 +42,6 @@ main() {
    fillRect(gw, width / 4, height / 4, width / 2, height / 2);
    setColor(gw, "GRAY");
    fillOval(gw, width / 4, height / 4, width / 2, height / 2);
+
+   return 0;
 }

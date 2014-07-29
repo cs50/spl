@@ -28,7 +28,7 @@
 #include "gobjects.h"
 #include "gwindow.h"
 
-main() {
+int main() {
    GWindow gw;
    GPolygon stopSign;
    double edge;
@@ -45,4 +45,6 @@ main() {
    setFilled(stopSign, true);
    setColor(stopSign, "RED");
    addAt(gw, stopSign, getWidth(gw) / 2, getHeight(gw) / 2);
+
+   return 0;
 }

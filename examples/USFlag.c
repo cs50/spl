@@ -27,6 +27,7 @@
 #include "cslib.h"
 #include "gmath.h"
 #include "gobjects.h"
+#include "gevents.h"
 #include "gwindow.h"
 
 /* Constants */
@@ -43,12 +44,13 @@ static void drawField(GWindow gw);
 static void drawObama(GWindow gw);
 static GPolygon newGStar(double size);
 
-main() {
+int main() {
    GWindow gw = newGWindow(FLAG_WIDTH, FLAG_HEIGHT);
    drawStripes(gw);
    drawField(gw);
    waitForClick();
    drawObama(gw);
+   return 0;
 }
 
 /* Draw the stripes */
