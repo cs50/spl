@@ -278,7 +278,7 @@ TokenType getTokenType(TokenScanner scanner, string token) {
    if (stringLength(token) == 0) return (TokenType) EOF;
    ch = token[0];
    if (isspace(ch)) return SEPARATOR;
-   if (ch == '"' || ch == '\'' && stringLength(token) > 1) return STRING;
+   if ((ch == '"' || ch == '\'') && stringLength(token) > 1) return STRING;
    if (isdigit(ch)) return NUMBER;
    if (isWordCharacter(scanner, ch)) return WORD;
    return OPERATOR;

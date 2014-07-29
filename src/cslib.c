@@ -136,7 +136,7 @@ void *getBlockData(void *ptr) {
 
 /* Section 3 -- error handling */
 
-extern void unhandledError(string msg);
+extern void unhandledError(string msg) __attribute__ ((noreturn));
 
 void error(string msg, ...) {
    va_list args;
@@ -164,13 +164,13 @@ void error(string msg, ...) {
 
 #undef main
 
-extern main_(int argc, string argv[]);
+extern int main_(int argc, string argv[]);
 
 static proc exitHook = NULL;
 static int argCount;
 static string *argArray;
 
-main(int argc, string argv[]) {
+int main(int argc, string argv[]) {
    int i;
 
    argCount = argc;

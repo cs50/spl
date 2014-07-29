@@ -279,6 +279,7 @@ bool containsGObject(GObject gobj, double x, double y) {
                                        && y <= gobj->y + gobj->height;
 }
 
+extern void unhandledError(string msg) __attribute__ ((noreturn));
 string getType(GObject gobj) {
    switch (gobj->type) {
     case GARC: return "GArc";
@@ -296,6 +297,10 @@ string getType(GObject gobj) {
     case GCHOOSER: return "GChooser";
     case GSLIDER: return "GSlider";
     case GTEXTFIELD: return "GTextField";
+
+    // TODO: Better way?
+    default:
+        unhandledError("Attempting to call getType on an object with unexpected type");
    }
 }
 
@@ -389,7 +394,7 @@ void setRaised(G3DRect rect, bool raised) {
 }
 
 bool isRaised(G3DRect rect) {
-   rect->u.g3dRectRep.raised;
+   return rect->u.g3dRectRep.raised;
 }
 
 /*

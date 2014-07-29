@@ -40,7 +40,7 @@ string getId(void *ptr);
 
 void createGWindowOp(GWindow gw, double width, double height, GObject top);
 void deleteGWindowOp(GWindow gw);
-void closeOp(GWindow gw);
+void closeGWindowOp(GWindow gw);
 void requestFocusOp(GWindow gw);
 void clearOp(GWindow gw);
 void repaintOp(GWindow gw);

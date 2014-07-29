@@ -45,6 +45,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <unistd.h>
 #include "cslib.h"
 #include "filelib.h"

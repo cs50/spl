@@ -85,7 +85,7 @@ static int N_TEST_MODULES = sizeof TEST_MODULES / sizeof TEST_MODULES[0];
 
 static int findTestModule(string name);
 
-main(int argc, string argv[]) {
+int main(int argc, string argv[]) {
    int i, index;
    string arg;
    bool modulesFound;

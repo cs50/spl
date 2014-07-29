@@ -283,7 +283,7 @@ extern exception ANY;
 
 /* Internal entry points -- see implementation for details */
 
-void throwException(exception *e, string name, void *value);
+void throwException(exception *e, string name, void *value) __attribute__ ((noreturn));
 void pushExceptionStack(ExceptionContextBlock *cptr);
 void popExceptionStack(void);
 void unwindException(ExceptionContextBlock *cptr);

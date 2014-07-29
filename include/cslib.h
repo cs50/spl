@@ -206,7 +206,7 @@ void *getBlockData(void *ptr);
  * expanded error string (defined as a C++ string) as its value.
  */
 
-   void error(string msg, ...);
+   void error(string msg, ...) __attribute__ ((noreturn));
 
 /* Section 4 -- Redefine main */
 
