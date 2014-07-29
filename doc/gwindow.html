@@ -45,7 +45,7 @@ This interface defines an abstract type representing a graphics window.
 <tr><td class=indexKey><nobr><a href="#Function:remove">remove(gw,&nbsp;gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Removes the object from its container or region.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:getGObjectAt">getGObjectAt(gw,&nbsp;x,&nbsp;y)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns a pointer to the topmost <code>GObject</code> containing the point (<code>x</code>, <code>y</code>), or <code>NULL</code> if no such object exists.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:setRegionAlignment">setRegionAlignment(gw,&nbsp;region,&nbsp;align)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Sets the alignment of the specified side region as specified by the string <code>align</code>.</td></tr>
-<tr><td class=indexKey><nobr><a href="#Function:pause">pause(milliseconds)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Pauses for the indicated number of milliseconds.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:hold">hold(milliseconds)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Pauses for the indicated number of milliseconds.</td></tr>
 </table>
 <h2>Type detail</h2>
 <hr>
@@ -448,9 +448,9 @@ parameter must be <code>"LEFT"</code>, <code>"RIGHT"</code>, or
 setRegionAlignment(gw, region, align);
 </pre>
 <hr>
-<a name="Function:pause"></a>
+<a name="Function:hold"></a>
 <pre class=detailCode>
-void pause(double milliseconds);
+void hold(double milliseconds);
 </pre>
 <div class=detailHTML>
 Pauses for the indicated number of milliseconds.  This function is
@@ -458,7 +458,7 @@ useful for animation where the motion would otherwise be too fast.
 <p>Usage:<br>
 </div>
 <pre class=usageCode>
-pause(milliseconds);
+hold(milliseconds);
 </pre>
 <hr>
 </table>

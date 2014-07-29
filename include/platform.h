@@ -58,7 +58,7 @@ void createTimerOp(GTimer timer, double delay);
 void deleteTimerOp(GTimer timer);
 void startTimerOp(GTimer timer);
 void stopTimerOp(GTimer timer);
-void pauseOp(double milliseconds);
+void holdOp(double milliseconds);
 void createSoundOp(Sound sound, string filename);
 void deleteSoundOp(Sound sound);
 void playSoundOp(Sound sound);

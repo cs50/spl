@@ -1,0 +1,32 @@
+2014-07-29  Rob Bowden  <rob@cs.harvard.edu>
+
+    * various files: rename "pause" to "hold" everywhere, to remove conflict
+    with unistd.h's pause
+
+    * examples/Makefile: add -lm flag to remove undefined reference errors
+
+    * src/gobjects.c: add "return" to isRaised
+
+    * src/platform.c (initPipe): fix syntax error in Windows version. Still
+    untested.
+
+    * include/platform.h: s/closeOp/closeGWindowOp
+
+    * include/sound.h: s/play/playSound
+
+    * include/exception.h (throwException): add __attribute__ ((noreturn))
+
+    * include/cslib.h (error): add __attribute__ ((noreturn))
+
+    * include/cslib.c (unhandledError): add __attribute__ ((noreturn))
+
+    * various files: Add "int" return type to main(s) and explicit "return 0"s
+
+    * src/platform.c (isprint): #include <ctype.h> for OS X
+
+    * examples/USFlag.c (waitForClick): #include "gevents.h"
+
+    * src/gobjects.c (getType): exit in error in the default case
+
+    * src/tokenscanner.c (getTokenType): added parentheses around boolean
+    expression

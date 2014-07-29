@@ -188,6 +188,6 @@ void setRegionAlignment(GWindow gw, string region, string align) {
    setRegionAlignmentOp(gw, region, align);
 }
 
-void pause(double milliseconds) {
-   pauseOp(milliseconds);
+void hold(double milliseconds) {
+   holdOp(milliseconds);
 }

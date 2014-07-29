@@ -1,4 +1,5 @@
 *.o
+spl.jar
 Breakout
 DrawLines
 DrawRectangles
