@@ -46,6 +46,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "cslib.h"
 #include "filelib.h"
 #include "gevents.h"
