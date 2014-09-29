@@ -53,12 +53,14 @@ TESTS = \
 TESTOBJECTS = \
     build/obj/TestStanfordCSLib.o
 
+JAR = spl.jar
+
 
 # ***************************************************************
 # Entry to bring the package up to date
 #    The "make all" entry should be the first real entry
 
-all: $(BUILD) $(OBJECTS) $(LIBRARIES) $(TESTS) tidy
+all: $(BUILD) $(OBJECTS) $(LIBRARIES) $(TESTS) $(JAR) tidy
 
 
 # ***************************************************************
@@ -282,6 +284,7 @@ lib/libcs.a: $(OBJECTS)
 	-rm -f build/lib/libcs.a
 	ar cr build/lib/libcs.a $(OBJECTS)
 	ranlib build/lib/libcs.a
+	cp -r c/include build/
 
 
 # ***************************************************************
@@ -299,7 +302,7 @@ TestStanfordCSLib: $(TESTOBJECTS) lib/libcs.a
 # ***************************************************************
 # Java Back End
 
-spl.jar: stanford/spl/JavaBackEnd.class
+$(JAR): stanford/spl/JavaBackEnd.class
 	@cp java/lib/acm.jar build/lib/spl.jar
 	@(cd build/classes; jar ufm ../lib/spl.jar ../../java/include/JBEManifest.txt \
 		`find stanford -name '*.class'`)
@@ -319,6 +322,7 @@ tidy:
 	@rm -f `find . -name ',*' -o -name '.,*' -o -name '*~'`
 	@rm -f `find . -name '*.tmp' -o -name '*.err'`
 	@rm -f `find . -name core -o -name a.out`
+	@rm -rf build/classes
 	@rm -rf build/obj
 
 scratch clean: tidy
