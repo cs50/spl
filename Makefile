@@ -45,7 +45,7 @@ OBJECTS = \
     build/obj/unixfile.o \
     build/obj/vector.o
 
-LIBRARIES = lib/libcs.a
+LIBRARIES = build/lib/libcs.a
 
 TESTS = \
     TestStanfordCSLib
@@ -60,7 +60,7 @@ JAR = spl.jar
 # Entry to bring the package up to date
 #    The "make all" entry should be the first real entry
 
-all: $(BUILD) $(OBJECTS) $(LIBRARIES) $(TESTS) $(JAR) tidy
+all: $(BUILD) $(OBJECTS) $(LIBRARIES) $(TESTS) $(JAR)
 
 
 # ***************************************************************
@@ -280,7 +280,7 @@ build/obj/vector.o: c/src/vector.c c/include/cmpfn.h c/include/cslib.h \
 # ***************************************************************
 # Entry to reconstruct the library archive
 
-lib/libcs.a: $(OBJECTS)
+build/lib/libcs.a: $(OBJECTS)
 	-rm -f build/lib/libcs.a
 	ar cr build/lib/libcs.a $(OBJECTS)
 	ranlib build/lib/libcs.a
@@ -291,11 +291,11 @@ lib/libcs.a: $(OBJECTS)
 # Test program
 
 build/obj/TestStanfordCSLib.o: c/tests/TestStanfordCSLib.c c/include/cslib.h \
-                         c/include/strlib.h c/include/unittest.h
+	c/include/strlib.h c/include/unittest.h
 	gcc -c -o build/obj/TestStanfordCSLib.o -Ic/include \
             c/tests/TestStanfordCSLib.c
 
-TestStanfordCSLib: $(TESTOBJECTS) lib/libcs.a
+TestStanfordCSLib: $(TESTOBJECTS) build/lib/libcs.a
 	gcc -o build/tests/TestStanfordCSLib $(TESTOBJECTS) -Lbuild/lib -lcs -lm
 
 
@@ -311,6 +311,17 @@ $(JAR): stanford/spl/JavaBackEnd.class
 stanford/spl/JavaBackEnd.class: java/src/stanford/spl/*.java
 	javac -d build/classes -classpath java/lib/acm.jar -sourcepath java/src \
 		java/src/stanford/spl/JavaBackEnd.java
+
+
+# ***************************************************************
+# install
+
+install: build/lib/libcs.a $(JAR)
+	rm -rf /usr/local/include/spl
+	cp -r build/include /usr/local/include/spl
+	chmod -R a+rX /usr/local/include/spl
+	cp build/lib/{libcs.a,spl.jar} /usr/local/lib/
+	chmod -R a+r /usr/local/lib/{libcs.a,spl.jar}
 
 
 # ***************************************************************
