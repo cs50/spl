@@ -1,43 +1,49 @@
-# Makefile for cslib directory
-# Last modified on Thu Aug  8 18:00:01 2013 by eroberts
-#****************************************************************
+# ****************************************************************
+# Makefile for SPL
+
+BUILD = \
+    build \
+    build/classes \
+    build/lib \
+    build/obj \
+    build/tests
 
 OBJECTS = \
-    obj/bst.o \
-    obj/charset.o \
-    obj/cmpfn.o \
-    obj/cslib.o \
-    obj/exception.o \
-    obj/filelib.o \
-    obj/foreach.o \
-    obj/generic.o \
-    obj/gevents.o \
-    obj/gobjects.o \
-    obj/gmath.o \
-    obj/graph.o \
-    obj/gtimer.o \
-    obj/gtypes.o \
-    obj/gwindow.o \
-    obj/hashmap.o \
-    obj/iterator.o \
-    obj/loadobj.o \
-    obj/map.o \
-    obj/options.o \
-    obj/platform.o \
-    obj/pqueue.o \
-    obj/queue.o \
-    obj/random.o \
-    obj/ref.o \
-    obj/set.o \
-    obj/simpio.o \
-    obj/sound.o \
-    obj/stack.o \
-    obj/strbuf.o \
-    obj/strlib.o \
-    obj/tokenscanner.o \
-    obj/unittest.o \
-    obj/unixfile.o \
-    obj/vector.o
+    build/obj/bst.o \
+    build/obj/charset.o \
+    build/obj/cmpfn.o \
+    build/obj/cslib.o \
+    build/obj/exception.o \
+    build/obj/filelib.o \
+    build/obj/foreach.o \
+    build/obj/generic.o \
+    build/obj/gevents.o \
+    build/obj/gobjects.o \
+    build/obj/gmath.o \
+    build/obj/graph.o \
+    build/obj/gtimer.o \
+    build/obj/gtypes.o \
+    build/obj/gwindow.o \
+    build/obj/hashmap.o \
+    build/obj/iterator.o \
+    build/obj/loadobj.o \
+    build/obj/map.o \
+    build/obj/options.o \
+    build/obj/platform.o \
+    build/obj/pqueue.o \
+    build/obj/queue.o \
+    build/obj/random.o \
+    build/obj/ref.o \
+    build/obj/set.o \
+    build/obj/simpio.o \
+    build/obj/sound.o \
+    build/obj/stack.o \
+    build/obj/strbuf.o \
+    build/obj/strlib.o \
+    build/obj/tokenscanner.o \
+    build/obj/unittest.o \
+    build/obj/unixfile.o \
+    build/obj/vector.o
 
 LIBRARIES = lib/libcs.a
 
@@ -45,242 +51,263 @@ TESTS = \
     TestStanfordCSLib
 
 TESTOBJECTS = \
-    obj/TestStanfordCSLib.o
+    build/obj/TestStanfordCSLib.o
 
 
 # ***************************************************************
 # Entry to bring the package up to date
 #    The "make all" entry should be the first real entry
 
-all: $(OBJECTS) $(LIBRARIES) $(TESTS)
+all: $(BUILD) $(OBJECTS) $(LIBRARIES) $(TESTS) tidy
+
+
+# ***************************************************************
+# directories
+
+$(BUILD):
+	mkdir -p $(BUILD)
 
 
 # ***************************************************************
 # Library compilations
 
-obj/bst.o: src/bst.c include/bst.h include/cmpfn.h include/cslib.h \
-           include/exception.h include/foreach.h include/generic.h \
-           include/iterator.h include/itertype.h include/strlib.h \
-           include/unittest.h
-	gcc -c -o obj/bst.o -Iinclude src/bst.c
+build/obj/bst.o: c/src/bst.c c/include/bst.h c/include/cmpfn.h c/include/cslib.h \
+           c/include/exception.h c/include/foreach.h c/include/generic.h \
+           c/include/iterator.h c/include/itertype.h c/include/strlib.h \
+           c/include/unittest.h
+	gcc -c -o build/obj/bst.o -Ic/include c/src/bst.c
 
-obj/charset.o: src/charset.c include/charset.h include/cmpfn.h \
-               include/cslib.h include/exception.h include/foreach.h \
-               include/generic.h include/iterator.h include/itertype.h \
-               include/strlib.h include/unittest.h
-	gcc -c -o obj/charset.o -Iinclude src/charset.c
+build/obj/charset.o: c/src/charset.c c/include/charset.h c/include/cmpfn.h \
+               c/include/cslib.h c/include/exception.h c/include/foreach.h \
+               c/include/generic.h c/include/iterator.h c/include/itertype.h \
+               c/include/strlib.h c/include/unittest.h
+	gcc -c -o build/obj/charset.o -Ic/include c/src/charset.c
 
-obj/cmdscan.o: src/cmdscan.c include/cmdscan.h include/cmpfn.h \
-               include/cslib.h include/exception.h include/generic.h \
-               include/hashmap.h include/iterator.h include/itertype.h \
-               include/private/tokenpatch.h include/simpio.h \
-               include/strlib.h include/tokenscanner.h
-	gcc -c -o obj/cmdscan.o -Iinclude src/cmdscan.c
+build/obj/cmdscan.o: c/src/cmdscan.c c/include/cmdscan.h c/include/cmpfn.h \
+               c/include/cslib.h c/include/exception.h c/include/generic.h \
+               c/include/hashmap.h c/include/iterator.h c/include/itertype.h \
+               c/include/private/tokenpatch.h c/include/simpio.h \
+               c/include/strlib.h c/include/tokenscanner.h
+	gcc -c -o build/obj/cmdscan.o -Ic/include c/src/cmdscan.c
 
-obj/cmpfn.o: src/cmpfn.c include/cmpfn.h include/cslib.h include/generic.h \
-             include/strlib.h
-	gcc -c -o obj/cmpfn.o -Iinclude src/cmpfn.c
+build/obj/cmpfn.o: c/src/cmpfn.c c/include/cmpfn.h c/include/cslib.h c/include/generic.h \
+             c/include/strlib.h
+	gcc -c -o build/obj/cmpfn.o -Ic/include c/src/cmpfn.c
 
-obj/cslib.o: src/cslib.c include/cslib.h include/exception.h
-	gcc -c -o obj/cslib.o -Iinclude src/cslib.c
+build/obj/cslib.o: c/src/cslib.c c/include/cslib.h c/include/exception.h
+	gcc -c -o build/obj/cslib.o -Ic/include c/src/cslib.c
 
-obj/exception.o: src/exception.c include/cmpfn.h include/cslib.h \
-                 include/exception.h include/generic.h include/strlib.h \
-                 include/unittest.h
-	gcc -c -o obj/exception.o -Iinclude src/exception.c
+build/obj/exception.o: c/src/exception.c c/include/cmpfn.h c/include/cslib.h \
+                 c/include/exception.h c/include/generic.h c/include/strlib.h \
+                 c/include/unittest.h
+	gcc -c -o build/obj/exception.o -Ic/include c/src/exception.c
 
-obj/filelib.o: src/filelib.c include/cmpfn.h include/cslib.h \
-               include/exception.h include/filelib.h include/generic.h \
-               include/iterator.h include/itertype.h include/strlib.h \
-               include/unittest.h
-	gcc -c -o obj/filelib.o -Iinclude src/filelib.c
+build/obj/filelib.o: c/src/filelib.c c/include/cmpfn.h c/include/cslib.h \
+               c/include/exception.h c/include/filelib.h c/include/generic.h \
+               c/include/iterator.h c/include/itertype.h c/include/strlib.h \
+               c/include/unittest.h
+	gcc -c -o build/obj/filelib.o -Ic/include c/src/filelib.c
 
-obj/foreach.o: src/foreach.c include/cslib.h include/foreach.h \
-               include/iterator.h
-	gcc -c -o obj/foreach.o -Iinclude src/foreach.c
+build/obj/foreach.o: c/src/foreach.c c/include/cslib.h c/include/foreach.h \
+               c/include/iterator.h
+	gcc -c -o build/obj/foreach.o -Ic/include c/src/foreach.c
 
-obj/generic.o: src/generic.c include/charset.h include/cmpfn.h \
-               include/cslib.h include/exception.h include/generic.h \
-               include/gevents.h include/gobjects.h include/gtimer.h \
-               include/gtypes.h include/gwindow.h include/hashmap.h \
-               include/iterator.h include/map.h include/pqueue.h \
-               include/queue.h include/ref.h include/set.h include/stack.h \
-               include/strbuf.h include/strlib.h include/vector.h
-	gcc -c -o obj/generic.o -Iinclude src/generic.c
+build/obj/generic.o: c/src/generic.c c/include/charset.h c/include/cmpfn.h \
+               c/include/cslib.h c/include/exception.h c/include/generic.h \
+               c/include/gevents.h c/include/gobjects.h c/include/gtimer.h \
+               c/include/gtypes.h c/include/gwindow.h c/include/hashmap.h \
+               c/include/iterator.h c/include/map.h c/include/pqueue.h \
+               c/include/queue.h c/include/ref.h c/include/set.h c/include/stack.h \
+               c/include/strbuf.h c/include/strlib.h c/include/vector.h
+	gcc -c -o build/obj/generic.o -Ic/include c/src/generic.c
 
-obj/gevents.o: src/gevents.c include/cmpfn.h include/cslib.h \
-               include/exception.h include/generic.h include/gevents.h \
-               include/ginteractors.h include/gobjects.h include/gtimer.h \
-               include/gtypes.h include/gwindow.h include/hashmap.h \
-               include/iterator.h include/platform.h include/sound.h \
-               include/strlib.h include/unittest.h include/vector.h
-	gcc -c -o obj/gevents.o -Iinclude src/gevents.c
+build/obj/gevents.o: c/src/gevents.c c/include/cmpfn.h c/include/cslib.h \
+               c/include/exception.h c/include/generic.h c/include/gevents.h \
+               c/include/ginteractors.h c/include/gobjects.h c/include/gtimer.h \
+               c/include/gtypes.h c/include/gwindow.h c/include/hashmap.h \
+               c/include/iterator.h c/include/platform.h c/include/sound.h \
+               c/include/strlib.h c/include/unittest.h c/include/vector.h
+	gcc -c -o build/obj/gevents.o -Ic/include c/src/gevents.c
 
-obj/gmath.o: src/gmath.c include/gmath.h
-	gcc -c -o obj/gmath.o -Iinclude src/gmath.c
+build/obj/gmath.o: c/src/gmath.c c/include/gmath.h
+	gcc -c -o build/obj/gmath.o -Ic/include c/src/gmath.c
 
-obj/gobjects.o: src/gobjects.c include/cmpfn.h include/cslib.h \
-                include/generic.h include/gevents.h include/ginteractors.h \
-                include/gmath.h include/gobjects.h include/gtimer.h \
-                include/gtypes.h include/gwindow.h include/platform.h \
-                include/sound.h include/vector.h
-	gcc -c -o obj/gobjects.o -Iinclude src/gobjects.c
+build/obj/gobjects.o: c/src/gobjects.c c/include/cmpfn.h c/include/cslib.h \
+                c/include/generic.h c/include/gevents.h c/include/ginteractors.h \
+                c/include/gmath.h c/include/gobjects.h c/include/gtimer.h \
+                c/include/gtypes.h c/include/gwindow.h c/include/platform.h \
+                c/include/sound.h c/include/vector.h
+	gcc -c -o build/obj/gobjects.o -Ic/include c/src/gobjects.c
 
-obj/graph.o: src/graph.c include/cmpfn.h include/cslib.h \
-             include/exception.h include/foreach.h include/generic.h \
-             include/graph.h include/hashmap.h include/iterator.h \
-             include/itertype.h include/set.h include/strlib.h \
-             include/unittest.h
-	gcc -c -o obj/graph.o -Iinclude src/graph.c
+build/obj/graph.o: c/src/graph.c c/include/cmpfn.h c/include/cslib.h \
+             c/include/exception.h c/include/foreach.h c/include/generic.h \
+             c/include/graph.h c/include/hashmap.h c/include/iterator.h \
+             c/include/itertype.h c/include/set.h c/include/strlib.h \
+             c/include/unittest.h
+	gcc -c -o build/obj/graph.o -Ic/include c/src/graph.c
 
-obj/gtimer.o: src/gtimer.c include/cmpfn.h include/cslib.h \
-              include/generic.h include/gevents.h include/ginteractors.h \
-              include/gobjects.h include/gtimer.h include/gtypes.h \
-              include/gwindow.h include/platform.h include/sound.h \
-              include/vector.h
-	gcc -c -o obj/gtimer.o -Iinclude src/gtimer.c
+build/obj/gtimer.o: c/src/gtimer.c c/include/cmpfn.h c/include/cslib.h \
+              c/include/generic.h c/include/gevents.h c/include/ginteractors.h \
+              c/include/gobjects.h c/include/gtimer.h c/include/gtypes.h \
+              c/include/gwindow.h c/include/platform.h c/include/sound.h \
+              c/include/vector.h
+	gcc -c -o build/obj/gtimer.o -Ic/include c/src/gtimer.c
 
-obj/gtypes.o: src/gtypes.c include/cmpfn.h include/cslib.h \
-              include/exception.h include/generic.h include/gtypes.h \
-              include/unittest.h
-	gcc -c -o obj/gtypes.o -Iinclude src/gtypes.c
+build/obj/gtypes.o: c/src/gtypes.c c/include/cmpfn.h c/include/cslib.h \
+              c/include/exception.h c/include/generic.h c/include/gtypes.h \
+              c/include/unittest.h
+	gcc -c -o build/obj/gtypes.o -Ic/include c/src/gtypes.c
 
-obj/gwindow.o: src/gwindow.c include/cmpfn.h include/cslib.h \
-               include/generic.h include/gevents.h include/ginteractors.h \
-               include/gmath.h include/gobjects.h include/gtimer.h \
-               include/gtypes.h include/gwindow.h include/platform.h \
-               include/sound.h include/vector.h
-	gcc -c -o obj/gwindow.o -Iinclude src/gwindow.c
+build/obj/gwindow.o: c/src/gwindow.c c/include/cmpfn.h c/include/cslib.h \
+               c/include/generic.h c/include/gevents.h c/include/ginteractors.h \
+               c/include/gmath.h c/include/gobjects.h c/include/gtimer.h \
+               c/include/gtypes.h c/include/gwindow.h c/include/platform.h \
+               c/include/sound.h c/include/vector.h
+	gcc -c -o build/obj/gwindow.o -Ic/include c/src/gwindow.c
 
-obj/hashmap.o: src/hashmap.c include/cmpfn.h include/cslib.h \
-               include/exception.h include/foreach.h include/generic.h \
-               include/hashmap.h include/iterator.h include/itertype.h \
-               include/strlib.h include/unittest.h
-	gcc -c -o obj/hashmap.o -Iinclude src/hashmap.c
+build/obj/hashmap.o: c/src/hashmap.c c/include/cmpfn.h c/include/cslib.h \
+               c/include/exception.h c/include/foreach.h c/include/generic.h \
+               c/include/hashmap.h c/include/iterator.h c/include/itertype.h \
+               c/include/strlib.h c/include/unittest.h
+	gcc -c -o build/obj/hashmap.o -Ic/include c/src/hashmap.c
 
-obj/iterator.o: src/iterator.c include/cmpfn.h include/cslib.h \
-                include/iterator.h include/itertype.h
-	gcc -c -o obj/iterator.o -Iinclude src/iterator.c
+build/obj/iterator.o: c/src/iterator.c c/include/cmpfn.h c/include/cslib.h \
+                c/include/iterator.h c/include/itertype.h
+	gcc -c -o build/obj/iterator.o -Ic/include c/src/iterator.c
 
-obj/loadobj.o: src/loadobj.c include/cmpfn.h include/cslib.h \
-               include/filelib.h include/generic.h include/iterator.h \
-               include/loadobj.h include/strlib.h
-	gcc -c -o obj/loadobj.o -Iinclude src/loadobj.c
+build/obj/loadobj.o: c/src/loadobj.c c/include/cmpfn.h c/include/cslib.h \
+               c/include/filelib.h c/include/generic.h c/include/iterator.h \
+               c/include/loadobj.h c/include/strlib.h
+	gcc -c -o build/obj/loadobj.o -Ic/include c/src/loadobj.c
 
-obj/map.o: src/map.c include/bst.h include/cmpfn.h include/cslib.h \
-           include/exception.h include/foreach.h include/generic.h \
-           include/iterator.h include/itertype.h include/map.h \
-           include/strlib.h include/unittest.h
-	gcc -c -o obj/map.o -Iinclude src/map.c
+build/obj/map.o: c/src/map.c c/include/bst.h c/include/cmpfn.h c/include/cslib.h \
+           c/include/exception.h c/include/foreach.h c/include/generic.h \
+           c/include/iterator.h c/include/itertype.h c/include/map.h \
+           c/include/strlib.h c/include/unittest.h
+	gcc -c -o build/obj/map.o -Ic/include c/src/map.c
 
-obj/options.o: src/options.c include/cmpfn.h include/cslib.h \
-               include/exception.h include/generic.h include/hashmap.h \
-               include/iterator.h include/options.h include/strlib.h \
-               include/unittest.h include/vector.h
-	gcc -c -o obj/options.o -Iinclude src/options.c
+build/obj/options.o: c/src/options.c c/include/cmpfn.h c/include/cslib.h \
+               c/include/exception.h c/include/generic.h c/include/hashmap.h \
+               c/include/iterator.h c/include/options.h c/include/strlib.h \
+               c/include/unittest.h c/include/vector.h
+	gcc -c -o build/obj/options.o -Ic/include c/src/options.c
 
-obj/platform.o: src/platform.c include/cmpfn.h include/cslib.h \
-                include/filelib.h include/generic.h include/gevents.h \
-                include/ginteractors.h include/gobjects.h include/gtimer.h \
-                include/gtypes.h include/gwindow.h include/hashmap.h \
-                include/iterator.h include/platform.h \
-                include/private/tokenpatch.h include/queue.h \
-                include/simpio.h include/sound.h include/strbuf.h \
-                include/strlib.h include/tokenscanner.h include/vector.h
-	gcc -c -o obj/platform.o -Iinclude src/platform.c
+build/obj/platform.o: c/src/platform.c c/include/cmpfn.h c/include/cslib.h \
+                c/include/filelib.h c/include/generic.h c/include/gevents.h \
+                c/include/ginteractors.h c/include/gobjects.h c/include/gtimer.h \
+                c/include/gtypes.h c/include/gwindow.h c/include/hashmap.h \
+                c/include/iterator.h c/include/platform.h \
+                c/include/private/tokenpatch.h c/include/queue.h \
+                c/include/simpio.h c/include/sound.h c/include/strbuf.h \
+                c/include/strlib.h c/include/tokenscanner.h c/include/vector.h
+	gcc -c -o build/obj/platform.o -Ic/include c/src/platform.c
 
-obj/pqueue.o: src/pqueue.c include/cmpfn.h include/cslib.h \
-              include/exception.h include/generic.h include/pqueue.h \
-              include/unittest.h include/vector.h
-	gcc -c -o obj/pqueue.o -Iinclude src/pqueue.c
+build/obj/pqueue.o: c/src/pqueue.c c/include/cmpfn.h c/include/cslib.h \
+              c/include/exception.h c/include/generic.h c/include/pqueue.h \
+              c/include/unittest.h c/include/vector.h
+	gcc -c -o build/obj/pqueue.o -Ic/include c/src/pqueue.c
 
-obj/queue.o: src/queue.c include/cmpfn.h include/cslib.h \
-             include/exception.h include/generic.h include/queue.h \
-             include/unittest.h
-	gcc -c -o obj/queue.o -Iinclude src/queue.c
+build/obj/queue.o: c/src/queue.c c/include/cmpfn.h c/include/cslib.h \
+             c/include/exception.h c/include/generic.h c/include/queue.h \
+             c/include/unittest.h
+	gcc -c -o build/obj/queue.o -Ic/include c/src/queue.c
 
-obj/random.o: src/random.c include/cslib.h include/exception.h \
-              include/private/randompatch.h include/random.h \
-              include/unittest.h
-	gcc -c -o obj/random.o -Iinclude src/random.c
+build/obj/random.o: c/src/random.c c/include/cslib.h c/include/exception.h \
+              c/include/private/randompatch.h c/include/random.h \
+              c/include/unittest.h
+	gcc -c -o build/obj/random.o -Ic/include c/src/random.c
 
-obj/ref.o: src/ref.c include/cslib.h include/ref.h
-	gcc -c -o obj/ref.o -Iinclude src/ref.c
+build/obj/ref.o: c/src/ref.c c/include/cslib.h c/include/ref.h
+	gcc -c -o build/obj/ref.o -Ic/include c/src/ref.c
 
-obj/set.o: src/set.c include/bst.h include/cmpfn.h include/cslib.h \
-           include/exception.h include/foreach.h include/generic.h \
-           include/iterator.h include/itertype.h include/map.h \
-           include/set.h include/strlib.h include/unittest.h
-	gcc -c -o obj/set.o -Iinclude src/set.c
+build/obj/set.o: c/src/set.c c/include/bst.h c/include/cmpfn.h c/include/cslib.h \
+           c/include/exception.h c/include/foreach.h c/include/generic.h \
+           c/include/iterator.h c/include/itertype.h c/include/map.h \
+           c/include/set.h c/include/strlib.h c/include/unittest.h
+	gcc -c -o build/obj/set.o -Ic/include c/src/set.c
 
-obj/simpio.o: src/simpio.c include/cmpfn.h include/cslib.h \
-              include/generic.h include/simpio.h include/strlib.h
-	gcc -c -o obj/simpio.o -Iinclude src/simpio.c
+build/obj/simpio.o: c/src/simpio.c c/include/cmpfn.h c/include/cslib.h \
+              c/include/generic.h c/include/simpio.h c/include/strlib.h
+	gcc -c -o build/obj/simpio.o -Ic/include c/src/simpio.c
 
-obj/sound.o: src/sound.c include/cmpfn.h include/cslib.h include/generic.h \
-             include/gevents.h include/ginteractors.h include/gobjects.h \
-             include/gtimer.h include/gtypes.h include/gwindow.h \
-             include/platform.h include/sound.h include/vector.h
-	gcc -c -o obj/sound.o -Iinclude src/sound.c
+build/obj/sound.o: c/src/sound.c c/include/cmpfn.h c/include/cslib.h c/include/generic.h \
+             c/include/gevents.h c/include/ginteractors.h c/include/gobjects.h \
+             c/include/gtimer.h c/include/gtypes.h c/include/gwindow.h \
+             c/include/platform.h c/include/sound.h c/include/vector.h
+	gcc -c -o build/obj/sound.o -Ic/include c/src/sound.c
 
-obj/stack.o: src/stack.c include/cmpfn.h include/cslib.h \
-             include/exception.h include/generic.h include/stack.h \
-             include/unittest.h
-	gcc -c -o obj/stack.o -Iinclude src/stack.c
+build/obj/stack.o: c/src/stack.c c/include/cmpfn.h c/include/cslib.h \
+             c/include/exception.h c/include/generic.h c/include/stack.h \
+             c/include/unittest.h
+	gcc -c -o build/obj/stack.o -Ic/include c/src/stack.c
 
-obj/strbuf.o: src/strbuf.c include/cmpfn.h include/cslib.h \
-              include/exception.h include/generic.h include/strbuf.h \
-              include/strlib.h include/unittest.h
-	gcc -c -o obj/strbuf.o -Iinclude src/strbuf.c
+build/obj/strbuf.o: c/src/strbuf.c c/include/cmpfn.h c/include/cslib.h \
+              c/include/exception.h c/include/generic.h c/include/strbuf.h \
+              c/include/strlib.h c/include/unittest.h
+	gcc -c -o build/obj/strbuf.o -Ic/include c/src/strbuf.c
 
-obj/strlib.o: src/strlib.c include/cmpfn.h include/cslib.h \
-              include/exception.h include/generic.h include/strlib.h \
-              include/unittest.h
-	gcc -c -o obj/strlib.o -Iinclude src/strlib.c
+build/obj/strlib.o: c/src/strlib.c c/include/cmpfn.h c/include/cslib.h \
+              c/include/exception.h c/include/generic.h c/include/strlib.h \
+              c/include/unittest.h
+	gcc -c -o build/obj/strlib.o -Ic/include c/src/strlib.c
 
-obj/tokenscanner.o: src/tokenscanner.c include/cmpfn.h include/cslib.h \
-                    include/exception.h include/generic.h \
-                    include/private/tokenpatch.h include/strbuf.h \
-                    include/strlib.h include/tokenscanner.h \
-                    include/unittest.h
-	gcc -c -o obj/tokenscanner.o -Iinclude src/tokenscanner.c
+build/obj/tokenscanner.o: c/src/tokenscanner.c c/include/cmpfn.h c/include/cslib.h \
+                    c/include/exception.h c/include/generic.h \
+                    c/include/private/tokenpatch.h c/include/strbuf.h \
+                    c/include/strlib.h c/include/tokenscanner.h \
+                    c/include/unittest.h
+	gcc -c -o build/obj/tokenscanner.o -Ic/include c/src/tokenscanner.c
 
-obj/unittest.o: src/unittest.c include/cmpfn.h include/cslib.h \
-                include/exception.h include/generic.h include/strlib.h \
-                include/unittest.h
-	gcc -c -o obj/unittest.o -Iinclude src/unittest.c
+build/obj/unittest.o: c/src/unittest.c c/include/cmpfn.h c/include/cslib.h \
+                c/include/exception.h c/include/generic.h c/include/strlib.h \
+                c/include/unittest.h
+	gcc -c -o build/obj/unittest.o -Ic/include c/src/unittest.c
 
-obj/unixfile.o: src/unixfile.c include/cmpfn.h include/cslib.h \
-                include/filelib.h include/generic.h include/iterator.h \
-                include/strlib.h include/vector.h
-	gcc -c -o obj/unixfile.o -Iinclude src/unixfile.c
+build/obj/unixfile.o: c/src/unixfile.c c/include/cmpfn.h c/include/cslib.h \
+                c/include/filelib.h c/include/generic.h c/include/iterator.h \
+                c/include/strlib.h c/include/vector.h
+	gcc -c -o build/obj/unixfile.o -Ic/include c/src/unixfile.c
 
-obj/vector.o: src/vector.c include/cmpfn.h include/cslib.h \
-              include/exception.h include/generic.h include/iterator.h \
-              include/itertype.h include/strlib.h include/unittest.h \
-              include/vector.h
-	gcc -c -o obj/vector.o -Iinclude src/vector.c
+build/obj/vector.o: c/src/vector.c c/include/cmpfn.h c/include/cslib.h \
+              c/include/exception.h c/include/generic.h c/include/iterator.h \
+              c/include/itertype.h c/include/strlib.h c/include/unittest.h \
+              c/include/vector.h
+	gcc -c -o build/obj/vector.o -Ic/include c/src/vector.c
 
 
 # ***************************************************************
 # Entry to reconstruct the library archive
 
 lib/libcs.a: $(OBJECTS)
-	-rm -f lib/libcs.a
-	ar cr lib/libcs.a $(OBJECTS)
-	ranlib lib/libcs.a
+	-rm -f build/lib/libcs.a
+	ar cr build/lib/libcs.a $(OBJECTS)
+	ranlib build/lib/libcs.a
 
 
 # ***************************************************************
 # Test program
 
-obj/TestStanfordCSLib.o: src/tests/TestStanfordCSLib.c include/cslib.h \
-                         include/strlib.h include/unittest.h
-	gcc -c -o obj/TestStanfordCSLib.o -Iinclude \
-            src/tests/TestStanfordCSLib.c
+build/obj/TestStanfordCSLib.o: c/tests/TestStanfordCSLib.c c/include/cslib.h \
+                         c/include/strlib.h c/include/unittest.h
+	gcc -c -o build/obj/TestStanfordCSLib.o -Ic/include \
+            c/tests/TestStanfordCSLib.c
 
 TestStanfordCSLib: $(TESTOBJECTS) lib/libcs.a
-	gcc -o TestStanfordCSLib $(TESTOBJECTS) -Llib -lcs -lm
+	gcc -o build/tests/TestStanfordCSLib $(TESTOBJECTS) -Lbuild/lib -lcs -lm
+
+
+# ***************************************************************
+# Java Back End
+
+spl.jar: stanford/spl/JavaBackEnd.class
+	@cp java/lib/acm.jar build/lib/spl.jar
+	@(cd build/classes; jar ufm ../lib/spl.jar ../../java/include/JBEManifest.txt \
+		`find stanford -name '*.class'`)
+	@echo jar cf build/lib/spl.jar . . .
+
+stanford/spl/JavaBackEnd.class: java/src/stanford/spl/*.java
+	javac -d build/classes -classpath java/lib/acm.jar -sourcepath java/src \
+		java/src/stanford/spl/JavaBackEnd.java
 
 
 # ***************************************************************
@@ -292,6 +319,7 @@ tidy:
 	@rm -f `find . -name ',*' -o -name '.,*' -o -name '*~'`
 	@rm -f `find . -name '*.tmp' -o -name '*.err'`
 	@rm -f `find . -name core -o -name a.out`
+	@rm -rf build/obj
 
 scratch clean: tidy
-	@rm -f -r $(OBJECTS) $(LIBRARIES) $(TESTS) $(TESTOBJECTS)
+	@rm -f -r $(BUILD) $(OBJECTS) $(LIBRARIES) $(TESTS) $(TESTOBJECTS)
