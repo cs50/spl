@@ -48,6 +48,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,6 +63,7 @@ import java.util.HashMap;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine.Info;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -698,7 +700,6 @@ public class JavaBackEnd implements
       Clip clip = clipTable.get(name);
       if (clip != null) return clip;
       try {
-         clip = AudioSystem.getClip();
          File file = new File(name);
          if (!file.exists()) {
             if (!name.startsWith("/") && !name.startsWith(".")) {
@@ -709,7 +710,13 @@ public class JavaBackEnd implements
             throw new ErrorException("createClip: File not found");
          }
          FileInputStream is = new FileInputStream(file);
-         AudioInputStream ais = AudioSystem.getAudioInputStream(is);
+         // to support mark/reset
+         BufferedInputStream bis = new BufferedInputStream(is);
+         AudioInputStream ais = AudioSystem.getAudioInputStream(bis);
+         
+         // describe ais
+         Info info = new Info(Clip.class, ais.getFormat());
+         clip = (Clip)AudioSystem.getLine(info);
          clip.open(ais);
       } catch (IOException ex) {
          throw new ErrorException("getClip: File not found");
