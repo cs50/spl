@@ -62,6 +62,7 @@ import java.util.HashMap;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine.Info;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -698,7 +699,6 @@ public class JavaBackEnd implements
       Clip clip = clipTable.get(name);
       if (clip != null) return clip;
       try {
-         clip = AudioSystem.getClip();
          File file = new File(name);
          if (!file.exists()) {
             if (!name.startsWith("/") && !name.startsWith(".")) {
@@ -708,9 +708,10 @@ public class JavaBackEnd implements
          if (!file.exists()) {
             throw new ErrorException("createClip: File not found");
          }
-         FileInputStream is = new FileInputStream(file);
-         AudioInputStream ais = AudioSystem.getAudioInputStream(is);
-         clip.open(ais);
+         AudioInputStream ais = AudioSystem.getAudioInputStream(file);
+         Info info = new Info(Clip.class, ais.getFormat());
+         clip = (Clip)AudioSystem.getLine(info);
+		 clip.open(ais);
       } catch (IOException ex) {
          throw new ErrorException("getClip: File not found");
       } catch (Exception ex) {
