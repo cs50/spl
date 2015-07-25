@@ -48,7 +48,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -709,15 +708,10 @@ public class JavaBackEnd implements
          if (!file.exists()) {
             throw new ErrorException("createClip: File not found");
          }
-         FileInputStream is = new FileInputStream(file);
-         // to support mark/reset
-         BufferedInputStream bis = new BufferedInputStream(is);
-         AudioInputStream ais = AudioSystem.getAudioInputStream(bis);
-         
-         // describe ais
+         AudioInputStream ais = AudioSystem.getAudioInputStream(file);
          Info info = new Info(Clip.class, ais.getFormat());
          clip = (Clip)AudioSystem.getLine(info);
-         clip.open(ais);
+		 clip.open(ais);
       } catch (IOException ex) {
          throw new ErrorException("getClip: File not found");
       } catch (Exception ex) {
