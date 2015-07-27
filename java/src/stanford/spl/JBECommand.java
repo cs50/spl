@@ -46,10 +46,14 @@ import acm.util.TokenScanner;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
+import java.io.File;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -622,7 +626,8 @@ class GImage_create extends JBECommand {
       String filename = nextString(scanner);
       scanner.verifyToken(")");
       try {
-         GImage gobj = new GImage(filename);
+         BufferedImage img = ImageIO.read(new File(filename));
+         GImage gobj = new GImage(img);
          jbe.defineGObject(id, gobj);
          System.out.println("result:GDimension(" + gobj.getWidth() +
                             ", " + gobj.getHeight() + ")");
