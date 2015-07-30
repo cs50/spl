@@ -315,8 +315,8 @@ void addAt(GWindow gw, GObject gobj, double x, double y);
 void addToRegion(GWindow gw, GObject gobj, string region);
 
 /*
- * Function: remove
- * Usage: remove(gw, gobj);
+ * Function: removeGWindow
+ * Usage: removeGWindow(gw, gobj);
  * ------------------------
  * Removes the object from its container or region.
  */
