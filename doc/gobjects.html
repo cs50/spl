@@ -70,7 +70,7 @@ These subclasses form a hierarchy that looks like this:
 <tr><td class=indexKey><nobr><a href="#Function:getSize">getSize(gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the size of the object as a <code>GDimension</code>.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:getBounds">getBounds(gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the bounding box of this object, which is defined to be the smallest rectangle that covers everything drawn by the figure.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:setColor">setColor(gobj,&nbsp;color)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Sets the color used to display this object.</td></tr>
-<tr><td class=indexKey><nobr><a href="#Function:getColor">getColor(gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the color used to display this object.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:getColorGObject">getColorGObject(gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the color used to display this object.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:setVisible">setVisible(gobj,&nbsp;flag)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Sets whether this object is visible.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:isVisible">isVisible(gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns <code>true</code> if this object is visible.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:sendForward">sendForward(gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Moves this object one step toward the front in the <i>z</i> dimension.</td></tr>
@@ -603,9 +603,9 @@ can be written as <code>"Dark Gray"</code>.
 setColor(gobj, color);
 </pre>
 <hr>
-<a name="Function:getColor"></a>
+<a name="Function:getColorGObject"></a>
 <pre class=detailCode>
-string getColor(GObject gobj);
+string getColorGObject(GObject gobj);
 </pre>
 <div class=detailHTML>
 Returns the color used to display this object.  This color is
@@ -616,7 +616,7 @@ two-digit hexadecimal values.
 <p>Usage:<br>
 </div>
 <pre class=usageCode>
-color = getColor(gobj);
+color = getColorGObject(gobj);
 </pre>
 <hr>
 <a name="Function:setVisible"></a>

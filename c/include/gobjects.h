@@ -215,8 +215,8 @@ GRectangle getBounds(GObject gobj);
 void setColorGObject(GObject gobj, string color);
 
 /*
- * Function: getColor
- * Usage: color = getColor(gobj);
+ * Function: getColorGObject
+ * Usage: color = getColorGObject(gobj);
  * ------------------------------
  * Returns the color used to display this object.  This color is
  * always returned as a string in the form <code>"#rrggbb"</code>,

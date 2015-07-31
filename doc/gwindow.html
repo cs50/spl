@@ -31,7 +31,7 @@ This interface defines an abstract type representing a graphics window.
 <tr><td class=indexKey><nobr><a href="#Function:drawRect">drawRect(gw,&nbsp;x,&nbsp;y,&nbsp;width,&nbsp;height)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Draws the frame of a rectangle with the specified bounds.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:fillRect">fillRect(gw,&nbsp;x,&nbsp;y,&nbsp;width,&nbsp;height)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Fills the frame of a rectangle with the specified bounds.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:setColor">setColor(gw,&nbsp;color)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Sets the color used for drawing.</td></tr>
-<tr><td class=indexKey><nobr><a href="#Function:getColor">getColor(gw)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the current color as a string in the form <code>"#rrggbb"</code>.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:getColorGWindow">getColorGWindow(gw)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the current color as a string in the form <code>"#rrggbb"</code>.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:getWidth">getWidth(gw)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the width of the graphics window in pixels.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:getHeight">getHeight(gw)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns the height of the graphics window in pixels.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:repaint">repaint(gw)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Schedule a repaint on the graphics window.</td></tr>
@@ -259,9 +259,9 @@ as are spaces and underscores, so that the Java color
 setColor(gw, color);
 </pre>
 <hr>
-<a name="Function:getColor"></a>
+<a name="Function:getColorGWindow"></a>
 <pre class=detailCode>
-string getColor(GWindow gw);
+string getColorGWindow(GWindow gw);
 </pre>
 <div class=detailHTML>
 Returns the current color as a string in the form <code>"#rrggbb"</code>.
@@ -271,7 +271,7 @@ the red, green, and blue components of the color, respectively.
 <p>Usage:<br>
 </div>
 <pre class=usageCode>
-color = getColor(gw);
+color = getColorGWindow(gw);
 </pre>
 <hr>
 <a name="Function:getWidth"></a>
