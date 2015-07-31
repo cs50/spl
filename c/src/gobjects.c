@@ -323,6 +323,11 @@ void setBounds(GObject gobj, double x, double y, double width, double height) {
 }
 
 void setFilled(GObject gobj, bool flag) {
+   // ensure gobj has valid type
+   if ((gobj->type &
+       (G3DRECT | GARC | GOVAL | GPOLYGON | GRECT | GROUNDRECT)) == 0) {
+      error("setFilled: Illegal GObject type");
+   }
    gobj->filled = flag;
    setFilledOp(gobj, flag);
 }
