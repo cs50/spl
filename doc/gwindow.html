@@ -42,7 +42,7 @@ This interface defines an abstract type representing a graphics window.
 <tr><td class=indexKey><nobr><a href="#Function:add">add(gw,&nbsp;gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Adds the <code>GObject</code> to the foreground layer of the window.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:addAt">addAt(gw,&nbsp;gobj,&nbsp;x,&nbsp;y)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Adds the <code>GObject</code> to the foreground layer of the window after moving it to the point (<code>x</code>, <code>y</code>).</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:addToRegion">addToRegion(gw,&nbsp;gobj,&nbsp;region)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Adds the <code>GObject</code> (which must be an interactor or a label) to the control strip specified by <code>region</code>.</td></tr>
-<tr><td class=indexKey><nobr><a href="#Function:remove">remove(gw,&nbsp;gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Removes the object from its container or region.</td></tr>
+<tr><td class=indexKey><nobr><a href="#Function:removeGWindow">removeGWindow(gw,&nbsp;gobj)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Removes the object from its container or region.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:getGObjectAt">getGObjectAt(gw,&nbsp;x,&nbsp;y)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Returns a pointer to the topmost <code>GObject</code> containing the point (<code>x</code>, <code>y</code>), or <code>NULL</code> if no such object exists.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:setRegionAlignment">setRegionAlignment(gw,&nbsp;region,&nbsp;align)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Sets the alignment of the specified side region as specified by the string <code>align</code>.</td></tr>
 <tr><td class=indexKey><nobr><a href="#Function:pause">pause(milliseconds)</a>&nbsp;</nobr></td><td class=indexSynopsis width=100%>Pauses for the indicated number of milliseconds.</td></tr>
@@ -404,16 +404,16 @@ or <code>"WEST"</code>.
 addToRegion(gw, gobj, region);
 </pre>
 <hr>
-<a name="Function:remove"></a>
+<a name="Function:removeGWindow"></a>
 <pre class=detailCode>
-void remove(GWindow gw, GObject gobj);
+void removeGWindow(GWindow gw, GObject gobj);
 </pre>
 <div class=detailHTML>
 Removes the object from its container or region.
 <p>Usage:<br>
 </div>
 <pre class=usageCode>
-remove(gw, gobj);
+removeGWindow(gw, gobj);
 </pre>
 <hr>
 <a name="Function:getGObjectAt"></a>

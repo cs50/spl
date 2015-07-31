@@ -57,6 +57,10 @@ public class JBELabel extends GLabel {
       super.setColor(color);
       if (jlabel != null) jlabel.setForeground(color);
    }
-   
+  
+   public void setLabel(String s) {
+      if (jlabel == null) super.setLabel(s);
+      else jlabel.setText(s);
+   }
    private JLabel jlabel;
 }

@@ -87,7 +87,9 @@ public abstract class GInteractor extends GObject implements GResizable {
    public void setSize(double width, double height) {
       int iw = GMath.round(width);
       int ih = GMath.round(height);
-      interactor.setPreferredSize(new Dimension(iw, ih));
+      Dimension d = new Dimension(iw, ih);
+      interactor.setPreferredSize(d);
+      interactor.setMinimumSize(d);
       interactor.setSize(iw, ih);
       interactor.repaint();
    }
