@@ -1,6 +1,8 @@
 # ****************************************************************
 # Makefile for SPL
 
+SHELL=/bin/bash
+
 BUILD = \
     build \
     build/classes \
