@@ -198,7 +198,7 @@ static void initPipe(void) {
 
    classpath = getenv("CLASSPATH");
    if (classpath == NULL) {
-      classpath = "./spl.jar";
+       classpath = "./spl.jar:/usr/local/lib/spl.jar";
    }
 
    programName = getRoot(getTail(getMainArgArray()[0]));
