@@ -18,4 +18,8 @@ https://cs50.github.io/spl/
 
 ### Ubuntu
 
-_coming soon_
+    apt-get install -y build-essential git openjdk-7-jdk
+    git clone git@github.com:cs50/spl.git
+    cd spl
+    make
+    sudo make install
