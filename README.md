@@ -4,7 +4,7 @@ This is CS50's fork of Eric Roberts' Stanford Portable Library.
 
 ## Documentation
 
-http://cs50.github.io/spl/index.html
+https://cs50.github.io/spl/
 
 ## Building
 
