@@ -106,6 +106,8 @@ public abstract class JBECommand {
       cmdTable.put("GObject.sendToBack", new GObject_sendToBack());
       cmdTable.put("GObject.sendToFront", new GObject_sendToFront());
       cmdTable.put("GObject.setColor", new GObject_setColor());
+      cmdTable.put("JBECanvas.setBackground", new JBECanvas_setBackground());
+      cmdTable.put("JBECanvas.setForeground", new JBECanvas_setForeground());
       cmdTable.put("GObject.setFillColor", new GObject_setFillColor());
       cmdTable.put("GObject.setFilled", new GObject_setFilled());
       cmdTable.put("GObject.setLineWidth", new GObject_setLineWidth());
@@ -909,6 +911,34 @@ class GObject_setColor extends JBECommand {
       scanner.verifyToken(")");
       if (gobj != null) {
          gobj.setColor(color.equals("") ? null : JTFTools.decodeColor(color));
+      }
+   }
+}
+
+class JBECanvas_setBackground extends JBECommand {
+   public void execute(TokenScanner scanner, JavaBackEnd jbe) {
+      scanner.verifyToken("(");
+      String id = nextString(scanner);
+      JBEWindow jw = jbe.getWindow(id);
+      scanner.verifyToken(",");
+      String color = nextString(scanner);
+      scanner.verifyToken(")");
+      if (jw != null) {
+         jw.getCanvas().setBackground(color.equals("") ? null : JTFTools.decodeColor(color));
+      }
+   }
+}
+
+class JBECanvas_setForeground extends JBECommand {
+   public void execute(TokenScanner scanner, JavaBackEnd jbe) {
+      scanner.verifyToken("(");
+      String id = nextString(scanner);
+      JBEWindow jw = jbe.getWindow(id);
+      scanner.verifyToken(",");
+      String color = nextString(scanner);
+      scanner.verifyToken(")");
+      if (jw != null) {
+         jw.getCanvas().setForeground(color.equals("") ? null : JTFTools.decodeColor(color));
       }
    }
 }

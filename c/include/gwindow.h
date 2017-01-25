@@ -203,6 +203,41 @@ void fillRect(GWindow gw, double x, double y, double width, double height);
 void setColorGWindow(GWindow gw, string color);
 
 /*
+ * Function: setBackground
+ * Usage: setBackground(gw, color);
+ * ---------------------------
+ * Sets the window background color.  The <code>color</code> parameter is
+ * usually one of the predefined color names from Java: <code>BLACK</code>,
+ * <code>BLUE</code>, <code>CYAN</code>, <code>DARK_GRAY</code>,
+ * <code>GRAY</code>, <code>GREEN</code>, <code>LIGHT_GRAY</code>,
+ * <code>MAGENTA</code>, <code>ORANGE</code>, <code>PINK</code>,
+ * <code>RED</code>, <code>WHITE</code>, or <code>YELLOW</code>.
+ * The case of the individual letters in the color name is ignored,
+ * as are spaces and underscores, so that the Java color
+ * <code>DARK_GRAY</code> could be written as <code>"Dark&nbsp;Gray"</code>.
+ */
+
+void setBackground(GWindow gw, string color);
+
+/*
+ * Function: setForeground
+ * Usage: setForeground(gw, color);
+ * ---------------------------
+ * Sets the window background color.  The <code>color</code> parameter is
+ * usually one of the predefined color names from Java: <code>BLACK</code>,
+ * <code>BLUE</code>, <code>CYAN</code>, <code>DARK_GRAY</code>,
+ * <code>GRAY</code>, <code>GREEN</code>, <code>LIGHT_GRAY</code>,
+ * <code>MAGENTA</code>, <code>ORANGE</code>, <code>PINK</code>,
+ * <code>RED</code>, <code>WHITE</code>, or <code>YELLOW</code>.
+ * The case of the individual letters in the color name is ignored,
+ * as are spaces and underscores, so that the Java color
+ * <code>DARK_GRAY</code> could be written as <code>"Dark&nbsp;Gray"</code>.
+ */
+
+void setForeground(GWindow gw, string color);
+
+
+/*
  * Function: getColorGWindow
  * Usage: color = getColorGWindow(gw);
  * ----------------------------

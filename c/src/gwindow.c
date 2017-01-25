@@ -125,6 +125,14 @@ void fillRect(GWindow gw, double x, double y, double width, double height) {
    freeGObject(gobj);
 }
 
+void setBackground(GWindow gw, string color) {
+    setBackgroundOp(gw, color);
+}
+
+void setForeground(GWindow gw, string color) {
+    setForegroundOp(gw, color);
+}
+
 void setColorGWindow(GWindow gw, string color) {
    gw->color = color;
 }

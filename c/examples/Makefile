@@ -10,7 +10,8 @@ PROGRAMS = \
     StopSign \
     TestGraphics \
     TestInteractors \
-    USFlag
+    USFlag \
+	CanvasColors
 
 FLAGS = -L../lib -lcs -lm
 
@@ -74,6 +75,12 @@ USFlag: USFlag.o
 
 USFlag.o: USFlag.c
 	gcc -c -I../include USFlag.c
+
+CanvasColors: CanvasColors.o
+	gcc -o CanvasColors CanvasColors.o $(FLAGS)
+
+CanvasColors.o: CanvasColors.c
+	gcc -c -I../include CanvasColors.c
 
 
 # ***************************************************************

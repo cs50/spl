@@ -118,6 +118,8 @@ void sendToBackOp(GObject gobj);
 
 void setVisibleGObjectOp(GObject gobj, bool flag);
 void setColorOp(GObject gobj, string color);
+void setBackgroundOp(GWindow gw, string color);
+void setForegroundOp(GWindow gw, string color);
 void setLocationOp(GObject gobj, double x, double y);
 void setSizeOp(GObject gobj, double width, double height);
 

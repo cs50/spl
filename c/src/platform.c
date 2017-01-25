@@ -696,6 +696,14 @@ void setColorOp(GObject gobj, string color) {
    putPipe("GObject.setColor(\"0x%lX\", \"%s\")", (long) gobj, color);
 }
 
+void setBackgroundOp(GWindow gw, string color) {
+   putPipe("JBECanvas.setBackground(\"0x%lX\", \"%s\")", (long) gw, color);
+}
+
+void setForegroundOp(GWindow gw, string color) {
+   putPipe("JBECanvas.setForeground(\"0x%lX\", \"%s\")", (long) gw, color);
+}
+
 void setLocationOp(GObject gobj, double x, double y) {
    putPipe("GObject.setLocation(\"0x%lX\", %g, %g)", (long) gobj, x, y);
 }

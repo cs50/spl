@@ -1,6 +1,14 @@
 # ****************************************************************
 # Makefile for SPL
 
+# detect install path
+# if Ubuntu, place in /usr/... otherwise
+# assume Fedora which is placed in /usr/local/...
+path:=/usr
+ifneq ($(findstring Ubuntu,$(shell uname -v)),Ubuntu)
+    path+=/local
+endif
+
 SHELL=/bin/bash
 
 BUILD = \
@@ -319,11 +327,11 @@ stanford/spl/JavaBackEnd.class: java/src/stanford/spl/*.java
 # install
 
 install: build/lib/libcs.a $(JAR)
-	rm -rf /usr/local/include/spl
-	cp -r build/include /usr/local/include/spl
-	chmod -R a+rX /usr/local/include/spl
-	cp build/lib/{libcs.a,spl.jar} /usr/local/lib/
-	chmod -R a+r /usr/local/lib/{libcs.a,spl.jar}
+	rm -rf $(path)/include/spl
+	cp -r build/include $(path)/include/spl
+	chmod -R a+rX $(path)/include/spl
+	cp build/lib/{libcs.a,spl.jar} $(path)/lib/
+	chmod -R a+r $(path)/lib/{libcs.a,spl.jar}
 
 
 # ***************************************************************
