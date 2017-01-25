@@ -19,9 +19,3 @@ https://cs50.github.io/spl/
 ### Ubuntu
 
 _coming soon_
-
-## TODO
-
-* Bug fixes.
-* Re-generate `docs`.
-* Tidy `Makefile`.
