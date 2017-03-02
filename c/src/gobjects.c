@@ -748,13 +748,13 @@ static GRectangle getBoundsGPolygon(GPolygon poly) {
    return createGRectangle(xMin, yMin, xMax - xMin, yMax - yMin);
 }
 
-static bool containsGPolygon(GArc arc, double x, double y) {
+static bool containsGPolygon(GPolygon poly, double x, double y) {
    double x0, y0, x1, y1;
    int crossings, i, n;
    GPoint *p0, *p1;
    Vector vertices;
 
-   vertices = arc->u.polygonRep.vertices;
+   vertices = poly->u.polygonRep.vertices;
    crossings = 0;
    n = sizeVector(vertices);
    if (n < 2) return false;
