@@ -1,0 +1,49 @@
+%{
+#include "color.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+%}
+struct ColorMap {const char *name; uint32_t color;};
+%%
+white,WHITE
+black,BLACK
+red,RED
+blue,BLUE
+cyan,CYAN
+gray,GRAY
+light gray,LIGHT_GRAY
+light_gray,LIGHT_GRAY
+dark_gray,DARK_GRAY
+dark gray,DARK_GRAY
+green,GREEN
+magenta,MAGENTA
+orange,ORANGE
+pink,PINK
+yellow,YELLOW
+%%
+
+bool mapStringColor(char const *str, Color *col) {
+    struct ColorMap const *w = in_word_set(str, strlen(str));
+    if (!w) return false;
+    col->full = w->color;
+    return true;
+}
+char const *mapColorString(Color col) {
+    switch (col.full) {
+    case WHITE:      return "#FFFFFF";
+    case BLACK:      return "#000000";
+    case RED:        return "#FF0000";
+    case BLUE:       return "#0000FF";
+    case CYAN:       return "#00FFFF";
+    case GRAY:       return "#808080";
+    case LIGHT_GRAY: return "#D3D3D3";
+    case DARK_GRAY:  return "#696969";
+    case GREEN:      return "#00FF00";
+    case MAGENTA:    return "#FF00FF";
+    case ORANGE:     return "#FFA500";
+    case PINK:       return "#FF1493";
+    case YELLOW:     return "#FFFF00";
+    default:         return NULL;
+    }
+}

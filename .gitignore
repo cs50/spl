@@ -1,2 +1,15 @@
-build/
-*.swp
+*.so
+obj/*
+bc/*
+*.o
+src/color.c
+breakout
+*.js
+*.mem
+*.html
+*/.libs
+*.lo
+*.la
+*/.deps
+*.bin
+*.data
