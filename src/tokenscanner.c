@@ -613,8 +613,8 @@ static void testStringScanner(void) {
 }
 
 static void testStreamScanner(void) {
-   TokenScanner scanner;
-   FILE *infile;
+   TokenScanner volatile scanner;
+   FILE * volatile infile;
 
    trace(scanner = newTokenScanner());
    trace(infile = fopen("include/tokenscanner.h", "r"));
@@ -643,8 +643,8 @@ static void testStreamScanner(void) {
 }
 
 static void testScannerNoOptions(void) {
-   TokenScanner scanner;
-   string token;
+   TokenScanner volatile scanner;
+   string volatile token;
 
    trace(scanner = newTokenScanner());
    trace(setInputString(scanner, "cout << \"pi = \" << 3.14159265 << endl;"));
@@ -683,8 +683,8 @@ static void testScannerNoOptions(void) {
 }
 
 static void testScannerLanguageOptions(void) {
-   TokenScanner scanner;
-   string token;
+   TokenScanner volatile scanner;
+   string volatile token;
 
    trace(scanner = newTokenScanner());
    trace(ignoreWhitespace(scanner));
@@ -738,7 +738,7 @@ static void testScannerLanguageOptions(void) {
 }
 
 static void testScanNumbers(void) {
-   TokenScanner scanner;
+   TokenScanner volatile scanner;
 
    trace(scanner = newTokenScanner());
    trace(ignoreWhitespace(scanner));
@@ -755,8 +755,8 @@ static void testScanNumbers(void) {
 }
 
 static void testScanEscapeSequences(void) {
-   TokenScanner scanner;
-   string token;
+   TokenScanner volatile scanner;
+   string volatile token;
 
    trace(scanner = newTokenScanner());
    trace(scanStrings(scanner));

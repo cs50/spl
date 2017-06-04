@@ -260,7 +260,7 @@ static Iterator newVectorIterator(void *collection) {
 /* Unit test */
 
 void testVectorModule(void) {
-   Vector vec, vec2;
+   Vector volatile vec, vec2;
 
    trace(vec = newVector());
    test(isEmpty(vec), true);

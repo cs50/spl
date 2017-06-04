@@ -130,13 +130,12 @@ string getString(StringBuffer sb) {
 /* Friend functions */
 
 int printfCapacity(string format, va_list args) {
-   int i, capacity, width, precision, len, lcount;
-   bool inFormat, dotSeen;
+   int i, capacity, width = 0, precision = 0, len, lcount = 0;
+   bool inFormat = false, dotSeen = false;
    string str;
    char ch;
 
    capacity = 0;
-   inFormat = false;
    for (i = 0; format[i] != '\0'; i++) {
       ch = format[i];
       if (!inFormat) {
@@ -268,7 +267,7 @@ static int testCapacity(string format, ...);
 /* Unit test */
 
 void testStrbufModule(void) {
-   string alphabet;
+   string volatile alphabet;
 
    testStringBufferAppend();
    testStringBufferFormat();

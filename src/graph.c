@@ -356,7 +356,7 @@ static void linkNodesAlphabetically(Graph g) {
 
 static void testNodeIterator(Graph g) {
    Node node;
-   int count;
+   int volatile count;
 
    count = 0;
    reportMessage("foreach (node in getNodes(g)) {");
@@ -373,7 +373,7 @@ static void testNodeIterator(Graph g) {
 
 static void testArcIterator(Graph g) {
    Arc arc;
-   int count;
+   int volatile count;
 
    count = 0;
    reportMessage("foreach (arc in getArcSet(g)) {");
@@ -390,7 +390,7 @@ static void testArcIterator(Graph g) {
 
 static void testArcsFrom(Graph g) {
    Arc arc;
-   int count;
+   int volatile count;
 
    count = 0;
    reportMessage("foreach (arc in getArcSet(getNode(g, \"A\"))) {");
@@ -407,7 +407,7 @@ static void testArcsFrom(Graph g) {
 
 static void testNeighbors(Graph g) {
    Node node;
-   int count;
+   int volatile count;
 
    count = 0;
    reportMessage("foreach (node in getNeighbors(getNode(g, \"A\"))) {");

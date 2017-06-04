@@ -302,8 +302,8 @@ static string OPTIONS[] = {
 };
 
 void testOptionsModule(void) {
-   string *args;
-   HashMap options;
+   string * volatile args;
+   HashMap volatile options;
 
    trace(args = parseShellArgs("-count 3 -size 1.5 -trace on -v a0 a1"));
    trace(options = parseOptions(args, OPTIONS));

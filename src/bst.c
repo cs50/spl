@@ -752,7 +752,7 @@ void testBSTModule(void) {
 /* Private functions */
 
 static void testStringBST(void) {
-   BST bst, bst2;
+   BST volatile bst, bst2;
 
    trace(bst = newBST(string));
    trace(insertArray(bst, ELEMENTS, N_ELEMENTS));
@@ -770,7 +770,7 @@ static void testStringBST(void) {
 }
 
 static void testIntBST(void) {
-   BST bst, bst2;
+   BST volatile bst, bst2;
 
    trace(bst = newBST(int));
    trace(insertArray(bst, PRIMES, N_PRIMES));

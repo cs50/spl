@@ -345,7 +345,7 @@ void testSetModule(void) {
 }
 
 static void testCharacterSet(void) {
-   Set vowels, consonants, lowercase, onePointTiles, onePointConsonants;
+   Set volatile vowels, consonants, lowercase, onePointTiles, onePointConsonants;
 
    trace(vowels = createCharSet("aeiou"));
    trace(consonants = createCharSet("bcdfghjklmnpqrstvwxyz"));
@@ -372,7 +372,7 @@ static Set createCharSet(string str) {
 }
 
 static void testStringSet() {
-   Set ospd3, ospd4, newWords, set;
+   Set volatile ospd3, ospd4, newWords, set;
 
    trace(ospd3 = newSet(string));
    test(isEmpty(ospd3), true);
@@ -414,7 +414,7 @@ static void addStringsToSet(Set set, string array[], int n) {
 }
 
 static void testIntegerSet() {
-   Set primes, evens, odds, set;
+   Set volatile primes, evens, odds, set;
 
    trace(primes = createDigitSet("2357"));
    trace(evens = createDigitSet("02468"));

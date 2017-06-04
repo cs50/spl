@@ -205,8 +205,8 @@ static int hashCode(string str) {
 }
 
 static void rehash(HashMap map, int nBuckets) {
-   Cell **oldBuckets, *cp, *np;
-   int oldNBuckets, bucket, i;
+   Cell ** volatile oldBuckets, *cp, *np;
+   int oldNBuckets = 0, bucket, i;
 
    if (map->count != 0) {
       oldBuckets = map->buckets;
@@ -292,7 +292,7 @@ static void markElement(string name, int *bitSet);
 /* Unit test */
 
 void testHashMapModule(void) {
-   HashMap map, map2;
+   HashMap volatile map, map2;
    string key;
    int bits;
 

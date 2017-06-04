@@ -269,8 +269,8 @@ static CharSet createCharSet(string str);
 /* Unit test */
 
 void testCharSetModule(void) {
-   CharSet vowels, consonants, lowercase, onePointTiles, onePointConsonants;
-   CharSet set;
+   CharSet volatile vowels, consonants, lowercase, onePointTiles, onePointConsonants;
+   CharSet volatile set;
 
    trace(vowels = createCharSet("aeiou"));
    trace(consonants = createCharSet("bcdfghjklmnpqrstvwxyz"));

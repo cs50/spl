@@ -218,7 +218,7 @@ static void swapHeapEntries(PriorityQueue pq, int i1, int i2) {
 /* Unit test */
 
 void testPriorityQueueModule(void) {
-   PriorityQueue pq, pq2;
+   PriorityQueue volatile pq, pq2;
 
    trace(pq = newPriorityQueue());
    test(size(pq), 0);

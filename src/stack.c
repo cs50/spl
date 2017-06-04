@@ -153,7 +153,7 @@ static void expandCapacity(Stack stack) {
 /* Unit test */
 
 void testStackModule(void) {
-   Stack stack, stack2;
+   volatile Stack stack, stack2;
 
    trace(stack = newStack());
    test(isEmpty(stack), true);

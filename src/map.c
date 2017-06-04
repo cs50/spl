@@ -153,9 +153,9 @@ static void addKeyToIterator(BSTNode node, void *data) {
 #ifndef _NOTEST_
 
 void testMapModule(void) {
-   Map map, map2;
+   Map volatile map, map2;
    string key;
-   string str;
+   string volatile str;
 
    trace(map = newMap());
    test(size(map), 0);

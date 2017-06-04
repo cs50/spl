@@ -150,7 +150,7 @@ Queue cloneQueue(Queue queue) {
 /* Unit test */
 
 void testQueueModule(void) {
-   Queue queue, queue2;
+   Queue volatile queue, queue2;
 
    trace(queue = newQueue());
    test(isEmpty(queue), true);

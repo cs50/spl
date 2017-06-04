@@ -344,7 +344,7 @@ GTimer getGTimer(GEvent e) {
 /* Unit test */
 
 void testGEventsModule(void) {
-    GEvent e;
+    GEvent volatile e;
 
     trace(e = newGMouseEvent(MOUSE_CLICKED, NULL, 2.3, 4.5));
     test(getEventClass(e), (int) MOUSE_EVENT);
