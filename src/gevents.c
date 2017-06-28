@@ -27,10 +27,7 @@
 
 #include "cslib.h"
 #include "gevents.h"
-#include "ginteractors.h"
-#include "gtimer.h"
 #include "gtypes.h"
-#include "hashmap.h"
 #include "private/sdl_helpers.h"
 #include "strlib.h"
 #include <limits.h>
@@ -45,8 +42,6 @@
 #define EVENT_SUBTYPE_MASK 0xF
 
 /* Global variables */
-
-/*static HashMap timerTable;*/
 
 /* Implementation of GEvent class */
 
@@ -155,9 +150,6 @@ static inline bool has_mouse(int mask) {
 }
 
 static inline bool has_event(int mask) {
-/*#ifdef __EMSCRIPTEN__*/
-    /*pause(1);*/
-/*#endif*/
     SDL_PumpEvents();
     return has_click(mask) || has_win(mask) || has_mouse(mask);
 }
@@ -208,19 +200,8 @@ void freeEvent(GEvent e) {
 }
 
 GEvent newGWindowEvent(EventType type, GWindow gw) {
-    GEvent e;
-    e = newBlock(GEvent);
+    GEvent e = newBlock(GEvent);
     e->eventType = type;
-    return e;
-}
-
-GEvent newGActionEvent(EventType type, GObject source, string actionCommand) {
-    GEvent e;
-
-    e = newBlock(GEvent);
-    e->eventType = type;
-    /*e->source = source;*/
-    /*e->actionCommand = copyString(actionCommand);*/
     return e;
 }
 
@@ -255,43 +236,11 @@ GEvent newGKeyEvent(EventType type, GWindow gw, int keyChar, int keyCode) {
     return e;
 }
 
-GEvent newGTimerEvent(EventType type, GTimer timer) {
-    GEvent e;
-
-    e = newBlock(GEvent);
-    e->eventType = type;
-    /*e->timer = timer;*/
-    return e;
-}
-
 GWindow getGWindow(GEvent e) {
     if (e->eventType & (WINDOW_EVENT | MOUSE_EVENT | KEY_EVENT)) {
         /*return e->gw;*/
     }
     error("getGWindow: Illegal event type");
-}
-
-GObject getSource(GEvent e) {
-    if (e->eventType & ACTION_EVENT) {
-        /*return e->source;*/
-    }
-    error("getSource: Illegal event type");
-}
-
-string getActionCommand(void *arg) {
-    /*GEvent e;*/
-    /*string type;*/
-
-    /*type = getBlockType(arg);*/
-    /*if (endsWith(type, "GObject")) {*/
-        /*return getActionCommandGInteractor(arg);*/
-    /*} else if (endsWith(type, "GEvent")) {*/
-        /*e = (GEvent) arg;*/
-        /*if (e->eventType & ACTION_EVENT) {*/
-            /*return e->actionCommand;*/
-        /*}*/
-    /*}*/
-    error("getActionCommand: Illegal argument type");
 }
 
 double getXGEvent(GEvent e) {
@@ -325,33 +274,3 @@ int getKeyCode(GEvent e) {
     /*}*/
     error("getKeyCode: Illegal event type");
 }
-
-GTimer getGTimer(GEvent e) {
-    /*if (e->eventType & TIMER_EVENT) {*/
-        /*return e->timer;*/
-    /*}*/
-    error("getGTimer: Illegal event type");
-}
-
-/**********************************************************************/
-/* Unit test for the gevents module                                   */
-/**********************************************************************/
-
-#ifndef _NOTEST_
-
-#include "unittest.h"
-
-/* Unit test */
-
-void testGEventsModule(void) {
-    GEvent volatile e;
-
-    trace(e = newGMouseEvent(MOUSE_CLICKED, NULL, 2.3, 4.5));
-    test(getEventClass(e), (int) MOUSE_EVENT);
-    test(getEventType(e), (int) MOUSE_CLICKED);
-    test(getGWindow(e), NULL);
-    test(getX(e), 2.3);
-    test(getY(e), 4.5);
-}
-
-#endif

@@ -65,15 +65,6 @@
 
 typedef char *string;
 
-/*
- * Type: proc
- * ----------
- * This function type represents an arbitrary procedure that can be passed
- * to an abstraction and then called back from the implementation.
- */
-
-typedef void (*proc)();
-
 /* Section 2 -- Memory allocation */
 
 /*
@@ -180,28 +171,11 @@ void *getBlockData(void *ptr);
 
 /* Section 3 -- error handling */
 
-/*
- * Function: error
- * Usage: error(msg, . . .);
- * -------------------------
- * Generates an error string, expanding <code>%</code> constructions
- * appearing in the error message string just as <code>printf</code> does.
- * The behavior depends on whether the call is compiled in C or C++.
- *
- * <p>In C, calling <code>error</code> first checks to see if there is a
- * handler for <code>ErrorException</code>.  If so, calling
- * <code>error</code> throws an <code>ErrorException</code>
- * exception with the expanded error string as argument.  If
- * there is no <code>ErrorException</code> handler, the program
- * prints the message to the standard error channel and exits
- * with a status code indicating failure (as given by the
- * constant <code>ERROR_EXIT_STATUS</code>).
- *
- * <p>In C++, calling <code>error</code> throws an exception with the
- * expanded error string (defined as a C++ string) as its value.
- */
+#define error(FMT, ...) do { error_msg(FMT, ##__VA_ARGS__); exit(EXIT_FAILURE); } while(0)
 
-ATTR((format (printf,1,2)))
-NORETURN void error(string msg, ...);
-
+#define error_msg(FMT, ...)                                 \
+    do {                                                    \
+        fprintf(stderr, FMT, ##__VA_ARGS__);                \
+        fprintf(stderr, "\n");                              \
+    } while (false)
 #endif

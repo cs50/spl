@@ -983,12 +983,6 @@ typedef enum {
    GRECT = 1<<7,
    G3DRECT = 1<<8,
    GROUNDRECT = 1<<9,
-   GINTERACTOR = 0x1F<<10,
-   GBUTTON = 1<<10,
-   GCHECKBOX = 1<<11,
-   GCHOOSER = 1<<12,
-   GSLIDER = 1<<13,
-   GTEXTFIELD = 1<<14
 } GObjectTypeBits;
 
 #endif

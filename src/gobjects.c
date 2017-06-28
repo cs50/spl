@@ -30,7 +30,6 @@
 #include "gobjects.h"
 #include "gwindow.h"
 #include "color.h"
-#include "ginteractors.h"
 #include "private/sdl_helpers.h"
 
 #include <stdio.h>
@@ -100,13 +99,6 @@ struct G3DRectCDT {
     bool raised;
 };
 
-/*
- * Type: GInteractorCDT
- * --------------------
- * This type includes all the extra information required for any of
- * the interactor subtypes.
- */
-
 struct GInteractorCDT {
     char *actionCommand;
     char *label;
@@ -130,7 +122,6 @@ struct GObjectCDT {
         struct G3DRectCDT g3dRectRep;
         struct GPolygonCDT polygonRep;
         struct GCompoundCDT compoundRep;
-        struct GInteractorCDT interactorRep;
         struct GRoundRectCDT roundRectRep;
     };
     GObject parent;
@@ -150,8 +141,6 @@ double fmin(double x, double y);
 double fmax(double x, double y);
 
 /* Private function prototypes */
-
-static GDimension getSizeGInteractor(GInteractor interactor);
 
 static GRectangle getBoundsGLine(GLine line);
 static GRectangle getBoundsGLabel(GLabel label);
@@ -249,7 +238,6 @@ double getHeightGObject(GObject gobj) {
 }
 
 GDimension getSize(GObject gobj) {
-    if ((gobj->type & GINTERACTOR) != 0) return getSizeGInteractor(gobj);
     GRectangle bounds = getBounds(gobj);
     return createGDimension(bounds.width, bounds.height);
 }
@@ -353,7 +341,6 @@ int getRealType(GObject gobj) {
     return gobj->type;
 }
 
-extern NORETURN void unhandledError(char *msg);
 string getType(GObject gobj) {
     switch (gobj->type) {
         case GARC: return "GArc";
@@ -366,15 +353,7 @@ string getType(GObject gobj) {
         case GRECT: return "GRect";
         case G3DRECT: return "G3DRect";
         case GROUNDRECT: return "GRoundRect";
-        case GBUTTON: return "GButton";
-        case GCHECKBOX: return "GCheckBox";
-        case GCHOOSER: return "GChooser";
-        case GSLIDER: return "GSlider";
-        case GTEXTFIELD: return "GTextField";
-
-                         // TODO: Better way?
-        default:
-                         unhandledError("Attempting to call getType on an object with unexpected type");
+        default: error("Attempting to call getType on an object with unexpected type");
     }
 }
 
@@ -386,7 +365,7 @@ static inline void setSizeOp(GObject gobj, double width, double height) {
     if (gobj->type == GCOMPOUND) {
         GCOMPOUND_APPLY(gobj, setSizeOp, width, height);
         recalcCompDimension(gobj);
-    } else if ((gobj->type & (GRECT | GOVAL | GIMAGE | GINTERACTOR)) == 0) {
+    } else if ((gobj->type & (GRECT | GOVAL | GIMAGE )) == 0) {
         error("setSize: Illegal GObject type");
     } else {
         gobj->width = width;
@@ -1015,127 +994,5 @@ GObject getGObjectCompound(GCompound compound, double x, double y) {
 
 static double dsq(double x0, double y0, double x1, double y1) {
     return (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0);
-}
-
-/* GInteractor operations */
-
-
-void setActionCommand(GInteractor interactor, char *cmd) {
-}
-
-char *getActionCommandGInteractor(GInteractor interactor) {
-    return NULL;
-}
-
-static GDimension getSizeGInteractor(GInteractor interactor) {
-    return createGDimension(0,0);
-}
-
-
-/* GButton operations */
-
-
-GButton newGButton(char *label) {
-    GButton button = newGObject(GBUTTON);
-    return button;
-}
-
-
-/* GCheckBox operations */
-
-
-GCheckBox newGCheckBox(char *label)  {
-    GCheckBox chkbox = newGObject(GCHECKBOX);
-    return chkbox;
-}
-
-
-/*
- * Function: setSelected
- * Usage: setSelected(chkbox, state);
- * ----------------------------------
- * Sets the state of the check box.
- */
-
-
-void setSelected(GCheckBox chkbox, bool state) {
-}
-
-
-/*
- * Function: isSelected
- * Usage: if (isSelected(chkbox)) ...
- * ----------------------------------
- * Returns <code>true</code> if the check box is selected.
- */
-
-bool isSelected(GCheckBox chkbox) {
-    return false;
-}
-
-
-/* GSlider operations */
-
-
-GSlider newGSlider(int min, int max, int value) {
-    GSlider slider = newGObject(GSLIDER);
-    return slider;
-}
-
-
-/*
- * Function: setValue
- * Usage: setValue(slider, value);
- * -------------------------------
- * Sets the current value of the slider.
- */
-
-
-void setValue(GSlider slider, int value) {
-}
-
-
-/*
- * Function: getValue
- * Usage: value = getValue(slider);
- * --------------------------------
- * Returns the current value of the slider.
- */
-
-
-int getValue(GSlider slider) {
-    return 0;
-}
-
-
-/* GTextField operations */
-
-GTextField newGTextField(int nChars) {
-    GTextField field = newGObject(GTEXTFIELD);
-    return field;
-}
-
-void setText(GTextField field, char *str) {
-}
-
-char *getText(GTextField field) {
-    return NULL;
-}
-
-/* GChooser operations */
-
-GChooser newGChooser(void) {
-    GChooser chooser = newGObject(GCHOOSER);
-    return chooser;
-}
-
-void addItem(GChooser chooser, char *item) {
-}
-
-void setSelectedItem(GChooser chooser, char *item) {
-}
-
-char *getSelectedItem(GChooser chooser) {
-    return NULL;
 }
 

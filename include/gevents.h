@@ -30,7 +30,6 @@
 
 #include "cslib.h"
 #include "generic.h"
-#include "gtimer.h"
 #include "gwindow.h"
 
 /*
@@ -44,12 +43,11 @@
  */
 
 typedef enum {
-   ACTION_EVENT = 0x010,
-   KEY_EVENT    = 0x020,
-   TIMER_EVENT  = 0x040,
-   WINDOW_EVENT = 0x080,
-   MOUSE_EVENT  = 0x100,
-   CLICK_EVENT  = 0x200,
+   KEY_EVENT    = 0x010,
+   TIMER_EVENT  = 0x020,
+   WINDOW_EVENT = 0x040,
+   MOUSE_EVENT  = 0x080,
+   CLICK_EVENT  = 0x100,
    ANY_EVENT    = 0x3F0
 } EventClassType;
 
@@ -62,7 +60,6 @@ typedef enum {
 typedef enum {
    WINDOW_CLOSED    = WINDOW_EVENT + 1,
    WINDOW_RESIZED   = WINDOW_EVENT + 2,
-   ACTION_PERFORMED = ACTION_EVENT + 1,
    MOUSE_CLICKED    = MOUSE_EVENT + 1,
    MOUSE_PRESSED    = MOUSE_EVENT + 2,
    MOUSE_RELEASED   = MOUSE_EVENT + 3,
@@ -71,7 +68,6 @@ typedef enum {
    KEY_PRESSED      = KEY_EVENT + 1,
    KEY_RELEASED     = KEY_EVENT + 2,
    KEY_TYPED        = KEY_EVENT + 3,
-   TIMER_TICKED     = TIMER_EVENT + 1
 } EventType;
 
 /*
@@ -328,43 +324,6 @@ typedef GEvent GWindowEvent;
 GWindowEvent newGWindowEvent(EventType type, GWindow gw);
 
 /*
- * Type: GActionEvent
- * ------------------
- * This event subtype represents activation of an interactor.
- */
-
-typedef GEvent GActionEvent;
-
-/*
- * Function: newGActionEvent
- * Usage: e = newGActionEvent(type, source, actionCommand);
- * --------------------------------------------------------
- * Creates a new <code>GActionEvent</code>.  The parameters are the
- * interactor that generated the event and the associated action command.
- */
-
-GActionEvent newGActionEvent(EventType type, GObject source,
-                                             string actionCommand);
-
-/*
- * Function: getSource
- * Usage: gobj = getSource(e);
- * ---------------------------
- * Returns the <code>GObject</code> that generated this event.
- */
-
-GObject getSource(GActionEvent e);
-
-/*
- * Function: getActionCommand
- * Usage: cmd = getActionCommand(arg);
- * -----------------------------------
- * Returns the action command associated with this event or interactor.
- */
-
-string getActionCommand(void *arg);
-
-/*
  * Type: GMouseEvent
  * -----------------
  * This event subtype represents a mouse action in a window.
@@ -442,32 +401,5 @@ char getKeyChar(GKeyEvent e);
  */
 
 int getKeyCode(GKeyEvent e);
-
-/*
- * Type: GTimerEvent
- * -----------------
- * This event subtype represents a tick from a <code>GTimer</code>.
- */
-
-typedef GEvent GTimerEvent;
-
-/*
- * Function: newGTimerEvent
- * Usage: e = newGTimerEvent(type, timer);
- * ---------------------------------------
- * Creates a new <code>GTimerEvent</code>.  The parameters are the specific
- * event type and the <code>GTimer</code>.
- */
-
-GEvent newGTimerEvent(EventType type, GTimer timer);
-
-/*
- * Function: getGTimer
- * Usage: timer = getGTimer(e);
- * ----------------------------
- * Returns the <code>GTimer</code> that generated this event.
- */
-
-GTimer getGTimer(GTimerEvent e);
 
 #endif

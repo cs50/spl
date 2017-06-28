@@ -27,14 +27,8 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdarg.h>
-#include "exception.h"
 #include "cslib.h"
 
-
-
-/* Constants */
-
-#define MAX_MESSAGE 500
 
 /* Section 2 -- Memory allocation */
 
@@ -63,18 +57,18 @@
  */
 
 typedef struct BlockHeader {
-   union {
-      size_t _password;
-      struct BlockHeader *_chain;
-   } block_union;
-   char *type;
-   size_t size;
-   void *data;
+    union {
+        size_t _password;
+        struct BlockHeader *_chain;
+    } block_union;
+    char *type;
+    size_t size;
+    void *data;
 } BlockHeader;
 
 #define password block_union._password
 #define chain block_union._chain
-#define PASSWORD 314159265L
+#define PASSWORD 314159265
 
 /*
  * Implementation notes:
@@ -84,81 +78,54 @@ typedef struct BlockHeader {
 /* Memory allocation implementation */
 
 void *getBlock(size_t nbytes) {
-   return getTypedBlock(nbytes, "?");
+    return getTypedBlock(nbytes, "?");
 }
 
 void *getTypedBlock(size_t nbytes, string type) {
-   BlockHeader *base;
+    BlockHeader *base;
 
-   base = (BlockHeader *) malloc(nbytes + sizeof(BlockHeader));
-   if (base == NULL) error("No memory available");
-   base->password = PASSWORD;
-   base->type = type;
-   base->size = nbytes;
-   base->data = NULL;
-   return (void *) ((char *) base + sizeof(BlockHeader));
+    base = (BlockHeader *) malloc(nbytes + sizeof(BlockHeader));
+    if (base == NULL) error("No memory available");
+    base->password = PASSWORD;
+    base->type = type;
+    base->size = nbytes;
+    base->data = NULL;
+    return (void *) ((char *) base + sizeof(BlockHeader));
 }
 
 void freeBlock(void *ptr) {
-   BlockHeader *base;
+    BlockHeader *base;
 
-   base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
-   if (base->password == PASSWORD) {
-      base->password = 0;
-      free(base);
-   }
+    base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
+    if (base->password == PASSWORD) {
+        base->password = 0;
+        free(base);
+    }
 }
 
 string getBlockType(void *ptr) {
-   BlockHeader *base;
+    BlockHeader *base;
 
-   base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
-   return (base->password == PASSWORD) ? base->type : "?";
+    base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
+    return (base->password == PASSWORD) ? base->type : "?";
 }
 
 void setBlockData(void *ptr, void *value) {
-   BlockHeader *base;
+    BlockHeader *base;
 
-   base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
-   if (base->password != PASSWORD) {
-      error("setBlockData: Block has not been allocated");
-   }
-   base->data = value;
+    base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
+    if (base->password != PASSWORD) {
+        error("setBlockData: Block has not been allocated");
+    }
+    base->data = value;
 }
 
 void *getBlockData(void *ptr) {
-   BlockHeader *base;
+    BlockHeader *base;
 
-   base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
-   if (base->password != PASSWORD) {
-      error("getBlockData: Block has not been allocated");
-   }
-   return base->data;
+    base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
+    if (base->password != PASSWORD) {
+        error("getBlockData: Block has not been allocated");
+    }
+    return base->data;
 }
-
-/* Section 3 -- error handling */
-
-extern NORETURN void unhandledError(string msg);
-
-void error(string msg, ...) {
-   va_list args;
-   char errbuf[MAX_MESSAGE + 1];
-   string errmsg;
-   int errlen;
-
-   va_start(args, msg);
-   vsnprintf(errbuf, MAX_MESSAGE, msg, args);
-   va_end(args);
-   errlen = strlen(errbuf);
-   if (errlen >= MAX_MESSAGE) {
-      unhandledError("error message too long");
-   }
-   errmsg = (string) malloc(errlen + 1);
-   if (errmsg == NULL) {
-      errmsg = "No memory available";
-   } else {
-      strcpy(errmsg, errbuf);
-   }
-   throwException(&ErrorException, "ErrorException", errmsg);
-}
-

@@ -23,12 +23,9 @@
 /*************************************************************************/
 
 #include <stdio.h>
+#include <string.h>
 #include "cslib.h"
 #include "generic.h"
-#include "iterator.h"
-#include "itertype.h"
-#include "strlib.h"
-#include "unittest.h"
 #include "vector.h"
 
 /*
@@ -51,7 +48,6 @@
  */
 
 struct VectorCDT {
-   IteratorHeader header;
    void **elements;
    int count;
    int capacity;
@@ -60,7 +56,6 @@ struct VectorCDT {
 /* Private function prototypes */
 
 static void expandCapacity(Vector vector);
-static Iterator newVectorIterator(void *collection);
 
 /* Exported entries */
 
@@ -68,7 +63,6 @@ Vector newVector(void) {
    Vector vector;
 
    vector = newBlock(Vector);
-   enableIteration(vector, newVectorIterator);
    vector->elements = newArray(INITIAL_CAPACITY, void *);
    vector->count = 0;
    vector->capacity = INITIAL_CAPACITY;
@@ -86,7 +80,6 @@ Vector arrayToVector(void *array[], int n) {
 
    if (array == NULL) return NULL;
    vector = newBlock(Vector);
-   enableIteration(vector, newVectorIterator);
    vector->elements = newArray(n, void *);
    vector->count = n;
    vector->capacity = n;
@@ -127,7 +120,6 @@ Vector cloneVector(Vector vector) {
    int i;
 
    newvec = newBlock(Vector);
-   enableIteration(newvec, newVectorIterator);
    newvec->count = vector->count;
    newvec->capacity = vector->capacity;
    newvec->elements = newArray(vector->capacity, void *);
@@ -227,68 +219,3 @@ void sendToBackVector(Vector vector, int index) {
     memmove(vector->elements + 1, vector->elements, index * sizeof (void *));
     *vector->elements = temp;
 }
-
-
-
-/*
- * Implementation notes: newVectorIterator
- * ---------------------------------------
- * This functions makes it possible to use the general iterator
- * facility on vectors.  For details on the general strategy, see
- * the comments in the itertype.h interface.
- */
-
-static Iterator newVectorIterator(void *collection) {
-   Vector vector;
-   Iterator iterator;
-   int i;
-
-   vector = (Vector) collection;
-   iterator = newListIterator(sizeof (void *), NULL);
-   for (i = 0; i < vector->count; i++) {
-      addToIteratorList(iterator, &vector->elements[i]);
-   }
-   return iterator;
-}
-
-/**********************************************************************/
-/* Unit test for the vector module                                    */
-/**********************************************************************/
-
-#ifndef _NOTEST_
-
-/* Unit test */
-
-void testVectorModule(void) {
-   Vector volatile vec, vec2;
-
-   trace(vec = newVector());
-   test(isEmpty(vec), true);
-   trace(add(vec, "A"));
-   test(isEmpty(vec), false);
-   trace(add(vec, "C"));
-   trace(add(vec, "D"));
-   trace(insert(vec, 1, "B"));
-   test(size(vec), 4);
-   test(get(vec, 0), "A");
-   test(get(vec, 1), "B");
-   test(get(vec, 2), "C");
-   test(get(vec, 3), "D");
-   testError(get(vec, 4));
-   testError(get(vec, -1));
-   trace(vec2 = clone(vec));
-   trace(set(vec, 0, "a"));
-   test(get(vec, 0), "a");
-   trace(remove(vec, 0));
-   test(size(vec), 3);
-   trace(insert(vec, 0, "A"));
-   test(get(vec, 0), "A");
-   trace(insert(vec, size(vec), "E"));
-   test(get(vec, 4), "E");
-   test(get(vec2, 0), "A");
-   test(get(vec2, 1), "B");
-   test(get(vec2, 2), "C");
-   test(get(vec2, 3), "D");
-}
-
-#endif

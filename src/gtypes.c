@@ -79,38 +79,3 @@ bool containsGRectangle(GRectangle r, GPoint pt) {
         && pt.y < r.y + r.height;
 }
 
-/**********************************************************************/
-/* Unit test for the gtypes module                                    */
-/**********************************************************************/
-
-#ifndef _NOTEST_
-
-#include "unittest.h"
-
-/* Unit test */
-
-void testGTypesModule(void) {
-    GPoint origin, pt;
-    GDimension dim;
-    GRectangle r;
-
-    trace(origin = createGPoint(0, 0));
-    trace(pt = createGPoint(2, 3));
-    trace(dim = createGDimension(3, 1));
-    trace(r = createGRectangle(1, 2, 3, 4));
-    test(getX(origin), 0.0);
-    test(getY(origin), 0.0);
-    test(getX(pt), 2.0);
-    test(getY(pt), 3.0);
-    test(getWidth(dim), 3.0);
-    test(getHeight(dim), 1.0);
-    test(getX(r), 1.0);
-    test(getY(r), 2.0);
-    test(getWidth(r), 3.0);
-    test(getHeight(r), 4.0);
-    test(isEmpty(r), false);
-    test(contains(r, origin), false);
-    test(contains(r, pt), true);
-}
-
-#endif

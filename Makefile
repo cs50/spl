@@ -5,7 +5,7 @@ CC = gcc
 EMCC = /usr/lib/emscripten/emcc
 EMCONF = /usr/lib/emscripten/emconfigure
 SDLINC = /usr/include/SDL2
-CFLAGS = -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-parameter -pipe -D_XOPEN_SOURCE=500 -std=c11 -fPIC -I$(INCDIR) -I$(SDLINC)  -ggdb3 -O2
+CFLAGS = -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-parameter -pipe -D_XOPEN_SOURCE=500 -std=c11 -fPIC -I$(INCDIR) -I$(SDLINC)  -ggdb3 -O0
 TARGET = lib$(NAME).so
 
 SRCDIR  = src
@@ -22,7 +22,7 @@ GFX_DIR = SDL2_gfx-1.0.3
 GFX_LIB_DIR = $(GFX_DIR)/.libs
 GFX = $(GFX_LIB_DIR)/libSDL2_gfx.a
 
-EMCFLAGS = -s TOTAL_MEMORY=67108864 -O3 -I $(GFX_DIR) -I $(INCDIR) -s AGGRESSIVE_VARIABLE_ELIMINATION=1 -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 -s USE_SDL=2 -s USE_SDL_TTF=2 --preload-file assets
+EMCFLAGS = -s TOTAL_MEMORY=67108864 -O3 -I $(GFX_DIR) -I $(INCDIR) -s AGGRESSIVE_VARIABLE_ELIMINATION=1 -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 -s USE_SDL=2 -s USE_SDL_TTF=2 --preload-file assets -s WASM=1
 
 
 LDFLAGS = -lSDL2 -lSDL2_ttf -lSDL2_gfx
@@ -67,4 +67,4 @@ $(GFX):
 clean:
 	rm -f core $(TARGET) src/color.c breakout
 	rm -f -r $(OBJDIR) $(BCDIR)
-	rm -f breakout_em.js breakout_em.mem breakout_em.html
+	rm -f breakout_em.{js,asm.js,html,data,bin,mem,html.mem}
