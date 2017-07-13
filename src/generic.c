@@ -32,7 +32,7 @@
 #include "gtypes.h"
 #include "vector.h"
 
-#include "color.h"
+#include "gcolor.h"
 
 #if (__STDC_VERSION__ >= 201112L)
     #define static_assert(pred, msg) _Static_assert(pred, msg)
@@ -74,8 +74,6 @@ bool containsGeneric(int size, ...)
     }
 }
 
-int _getGObjectType(GObject);
-
 void add(void *container, void *item)
 {
     if (getBlockType(item) != GOBJECT) {
@@ -85,7 +83,7 @@ void add(void *container, void *item)
     unsigned char type = getBlockType(container);
     if (type == GWINDOW) {
         addGWindow(container, item);
-    } else if (type == GOBJECT && _getGObjectType(container) == GCOMPOUND) {
+    } else if (type == GOBJECT && getType(container) == GCOMPOUND) {
         addGCompound(container, item);
     } else {
         error("add: Unrecognized type");
@@ -101,7 +99,7 @@ void remove(void *container, void *item)
     unsigned char type = getBlockType(container);
     if (type == GWINDOW) {
         removeGWindow(container, item);
-    } else if (type == GOBJECT && _getGObjectType(container) == GCOMPOUND) {
+    } else if (type == GOBJECT && getType(container) == GCOMPOUND) {
         removeGCompound(container, item);
     } else {
         error("remove: Unrecognized type");
@@ -235,14 +233,8 @@ bool isVisible(void *arg)
     }
 }
 
-void setColor(void *arg, string color)
+void setColor(void *arg, GColor c)
 {
-    Color c;
-
-    if (!mapStringColor(color, &c)) {
-        error("setColor: Unrecognized color: %s", color);
-    }
-
     unsigned char type = getBlockType(arg);
     if (type == GOBJECT) {
         setColorGObject(arg, c);
@@ -250,5 +242,17 @@ void setColor(void *arg, string color)
         setColorGWindow((GWindow) arg, c);
     } else {
         error("setColor: Unrecognized type");
+    }
+}
+
+GColor getColor(void *arg)
+{
+    unsigned char type = getBlockType(arg);
+    if (type == GOBJECT) {
+        return getColorGObject(arg);
+    } else if (type == GWINDOW) {
+        return getColorGWindow(arg);
+    } else {
+        error("getColor: Unrecognized type");
     }
 }

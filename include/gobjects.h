@@ -83,6 +83,22 @@ typedef struct GObjectCDT *GObject;
 #endif
 
 /*
+ * This enumeration identifies a GObject type in a way that simplifies
+ * checking whether a particular function is legal on that object.
+ */
+typedef enum {
+   GARC,
+   GCOMPOUND,
+   GIMAGE,
+   GLABEL,
+   GLINE,
+   GOVAL,
+   GPOLYGON,
+   GRECT,
+   GROUNDRECT,
+} GObjectType;
+
+/*
  * Function: freeGObject
  * Usage: freeGObject(gobj);
  * -------------------------
@@ -212,7 +228,7 @@ GRectangle getBounds(GObject gobj);
  * can be written as <code>"Dark Gray"</code>.
  */
 
-void setColorGObject(GObject gobj, Color col);
+void setColorGObject(GObject gobj, GColor col);
 
 /*
  * Function: getColorGObject
@@ -225,7 +241,7 @@ void setColorGObject(GObject gobj, Color col);
  * two-digit hexadecimal values.
  */
 
-string getColorGObject(GObject gobj);
+GColor getColorGObject(GObject gobj);
 
 /*
  * Function: setVisible
@@ -302,11 +318,11 @@ bool containsGObject(GObject gobj, double x, double y);
  * Function: getType
  * Usage: type = getType(gobj);
  * ----------------------------
- * Returns the subtype of the object as a string, as in <code>"GOval"</code>
- * or <code>"GRect"</code>.
+ * Returns the subtype of the object as a GObjectType (integer), as in <code>GOVAL</code>
+ * or <code>GRECT</code>.
  */
 
-string getType(GObject gobj);
+GObjectType getType(GObject gobj);
 
 /*
  * Function: getParent
@@ -373,7 +389,7 @@ bool isFilled(GObject gobj);
  * Sets the color used to display the filled region of this rectangle.
  */
 
-void setFillColor(GObject gobj, string color);
+void setFillColor(GObject gobj, GColor c);
 
 /*
  * Function: getFillColor
@@ -384,7 +400,7 @@ void setFillColor(GObject gobj, string color);
  * the empty string.
  */
 
-string getFillColor(GObject gobj);
+GColor getFillColor(GObject gobj);
 
 /*
  * Type: GRect
@@ -928,23 +944,6 @@ void removeGCompound(GCompound compound, GObject gobj);
 
 GObject getGObjectCompound(GCompound compound, double x, double y);
 
-/*
- * Friend type: ObjectTypeBits
- * ---------------------------
- * This enumeration identifies a GObject type in a way that simplifies
- * checking whether a particular function is legal on that object.
- */
 
-typedef enum {
-   GARC = 1<<0,
-   GCOMPOUND = 1<<1,
-   GIMAGE = 1<<2,
-   GLABEL = 1<<3,
-   GLINE = 1<<4,
-   GOVAL = 1<<5,
-   GPOLYGON = 1<<6,
-   GRECT = 1<<7,
-   GROUNDRECT = 1<<8,
-} GObjectTypeBits;
 
 #endif

@@ -153,7 +153,7 @@ bool isVisible(void *arg);
  * Sets the color of the argument.
  */
 
-void setColor(void *arg, string color);
+void setColor(void *arg, GColor c);
 
 /*
  * Friend function: getTypeSizeForType

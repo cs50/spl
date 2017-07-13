@@ -13,7 +13,7 @@ OBJDIR  = obj
 INCDIR  = include
 BCDIR   = bc
 
-SRCS = $(SRCDIR)/typemap.c $(SRCDIR)/color.c $(wildcard $(SRCDIR)/*.c)
+SRCS = $(SRCDIR)/typemap.c $(wildcard $(SRCDIR)/*.c)
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 GFX_DIR = SDL2_gfx-1.0.3
@@ -45,9 +45,6 @@ breakout: $(SRCS) $(GFX) breakout.c $(INCS) Makefile
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCS) Makefile
 	$(CC) $(CFLAGS) -MMD -c -o $@ $< $(LDFLAGS)
 
-
-$(SRCDIR)/color.c: $(SRCDIR)/color.gperf
-	gperf --ignore-case -F",0" -Ct  $^  --output-file $@
 
 $(SRCDIR)/typemap.c: $(SRCDIR)/typemap.gperf
 	gperf --ignore-case -N"in_type_set" -F",UNKNOWN" -Ct  $^  --output-file $@

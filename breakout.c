@@ -177,7 +177,7 @@ int main(int argc, char* argv[])
                     }
 
                     // if ball's collided with brick
-                    else if (strcmp(getType(object), "GRect") == 0)
+                    else if (getType(object) == GRECT)
                     {
                         // remove brick from window
                         removeGWindow(window, object);
@@ -219,7 +219,7 @@ void initBricks(GWindow window)
     // determine width of each brick
     double width = (WIDTH - GAP * COLS) / COLS;
 
-    string colors[NUM_COLORS] = {"RED", "ORANGE", "YELLOW", "GREEN", "CYAN"};
+    GColor colors[NUM_COLORS] = {RED, ORANGE, YELLOW, GREEN, CYAN};
 
     // for each row
     for (int row = 0; row < ROWS; row++)
@@ -256,7 +256,7 @@ GOval initBall(GWindow window)
     double bx = WIDTH / 2 - RADIUS;
     double by = HEIGHT / 2 - RADIUS;
     GOval ball = newGOval(bx, by, 2 * RADIUS, 2 * RADIUS);
-    setColor(ball, "BLACK");
+    setColor(ball, BLACK);
     setFilled(ball, true);
     add(window, ball);
     return ball;
@@ -270,7 +270,7 @@ GRect initPaddle(GWindow window)
     double x = (WIDTH - PADDLE_WIDTH) / 2;
     double y = HEIGHT - PADDLE_HEIGHT - MARGIN;
     GRect paddle = newGRect(x, y, PADDLE_WIDTH, PADDLE_HEIGHT);
-    setColor(paddle, "BLACK");
+    setColor(paddle, BLACK);
     setFilled(paddle, true);
     add(window, paddle);
     return paddle;
@@ -282,7 +282,7 @@ GRect initPaddle(GWindow window)
 GLabel initScoreboard(GWindow window)
 {
     GLabel label = newGLabel("");
-    setColor(label, "LIGHT_GRAY");
+    setColor(label, LIGHT_GRAY);
     setFont(label, "arial-48");
     add(window, label);
     sendToBack(label);

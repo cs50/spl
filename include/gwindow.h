@@ -27,7 +27,7 @@
 
 #include "cslib.h"
 #include "gtypes.h"
-#include "color.h"
+#include "gcolor.h"
 
 #ifndef _gobjects_h
 
@@ -201,7 +201,7 @@ void fillRect(GWindow gw, double x, double y, double width, double height);
  * <code>DARK_GRAY</code> could be written as <code>"Dark&nbsp;Gray"</code>.
  */
 
-void setColorGWindow(GWindow gw, Color color);
+void setColorGWindow(GWindow gw, GColor color);
 
 /*
  * Function: getColorGWindow
@@ -213,7 +213,7 @@ void setColorGWindow(GWindow gw, Color color);
  * the red, green, and blue components of the color, respectively.
  */
 
-string getColorGWindow(GWindow gw);
+GColor getColorGWindow(GWindow gw);
 
 /*
  * Function: getWidth

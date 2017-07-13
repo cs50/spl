@@ -35,11 +35,10 @@
 #include "gobjects.h"
 #include "gtypes.h"
 #include "gwindow.h"
-#include "color.h"
+#include "gcolor.h"
 
 
 void setWindow(GObject gobj, GWindow win);
-static Color getRealGWindowColor(GWindow gw);
 static void drawOp(GObject gobj, GWindow gw);
 static inline void drawGOvalOp(GWindow gw, GOval oval);
 static inline void drawGRectOp(GWindow gw, GRect rect);
@@ -60,9 +59,7 @@ GWindow newGWindow(double width, double height)
     setWindow(gw->contents, gw);
     SDL_CreateWindowAndRenderer(width, height, 0, &gw->win, &gw->ren);
     setWindowTitle(gw, "Untitled");
-    setColorGWindow(gw, (Color) {
-        .full = WHITE
-    });
+    setColorGWindow(gw, WHITE);
     SDL_RenderClear(gw->ren);
     SDL_RenderPresent(gw->ren);
     return gw;
@@ -116,17 +113,10 @@ GPoint drawPolarLine(GWindow gw, double x, double y, double r, double theta)
     return createGPoint(x1, y1);
 }
 
-static Color getRealGWindowColor(GWindow gw)
-{
-    Color c;
-    SDL_GetRenderDrawColor(gw->ren, &c.r, &c.g, &c.b, &c.a);
-    return c;
-}
-
 void drawOval(GWindow gw, double x, double y, double width, double height)
 {
     GObject gobj = newGOval(x, y, width, height);
-    setColorGObject(gobj, getRealGWindowColor(gw));
+    setColorGObject(gobj, getColorGWindow(gw));
     drawGOvalOp(gw, gobj);
     SDL_RenderPresent(gw->ren);
     freeGObject(gobj);
@@ -136,7 +126,7 @@ void fillOval(GWindow gw, double x, double y, double width, double height)
 {
     GObject gobj = newGOval(x, y, width, height);
     setFilled(gobj, true);
-    setColorGObject(gobj, getRealGWindowColor(gw));
+    setColorGObject(gobj, getColorGWindow(gw));
     drawGOvalOp(gw, gobj);
     SDL_RenderPresent(gw->ren);
     freeGObject(gobj);
@@ -145,7 +135,7 @@ void fillOval(GWindow gw, double x, double y, double width, double height)
 void drawRect(GWindow gw, double x, double y, double width, double height)
 {
     GRect r = newGRect(x,y,width,height);
-    setColorGObject(r, getRealGWindowColor(gw));
+    setColorGObject(r, getColorGWindow(gw));
     drawGRectOp(gw, r);
     SDL_RenderPresent(gw->ren);
     freeGObject(r);
@@ -156,21 +146,23 @@ void fillRect(GWindow gw, double x, double y, double width, double height)
 {
     GObject gobj = newGRect(x, y, width, height);
     setFilled(gobj, true);
-    setColorGObject(gobj, getRealGWindowColor(gw));
+    setColorGObject(gobj, getColorGWindow(gw));
     drawGRectOp(gw, gobj);
     SDL_RenderPresent(gw->ren);
     freeGObject(gobj);
 }
 
-void setColorGWindow(GWindow gw, Color c)
+void setColorGWindow(GWindow gw, GColor c)
 {
     SDL_SetRenderDrawColor(gw->ren, c.r, c.g, c.b, c.a);
 
 }
 
-string getColorGWindow(GWindow gw)
+GColor getColorGWindow(GWindow gw)
 {
-    return (string) mapColorString(getRealGWindowColor(gw));
+    GColor c;
+    SDL_GetRenderDrawColor(gw->ren, &c.r, &c.g, &c.b, &c.a);
+    return c;
 }
 
 double getWidthGWindow(GWindow gw)
@@ -205,9 +197,7 @@ string getWindowTitle(GWindow gw)
     return (string) SDL_GetWindowTitle(gw->win);
 }
 
-int _getGObjectType(GObject gobj);
-Color getRealGObjectColor(GObject gobj);
-Color getRealGObjectFillColor(GObject gobj);
+GColor getFillColor(GObject gobj);
 
 typedef struct {
     double x1;
@@ -229,7 +219,7 @@ DrawBounds getDrawBounds(GObject gobj)
 static inline void drawGRectOp(GWindow gw, GRect rect)
 {
     DrawBounds d = getDrawBounds(rect);
-    Color c = getRealGObjectColor(rect);
+    GColor c = getColorGObject(rect);
     if (isFilled(rect)) {
         boxRGBA(gw->ren, d.x2, d.y2, d.x1, d.y1, c.r, c.g, c.b, c.a);
     } else {
@@ -241,20 +231,20 @@ static inline void drawGRectOp(GWindow gw, GRect rect)
 static inline void drawGLineOp(GWindow gw, GLine line)
 {
     DrawBounds d = getDrawBounds(line);
-    Color c = getRealGObjectColor(line);
+    GColor c = getColorGObject(line);
     lineRGBA(gw->ren, d.x1, d.y1, d.x2, d.y2, c.r, c.g, c.b, c.a);
 }
 
 static inline void drawGOvalOp(GWindow gw, GOval oval)
 {
-    Color c = getRealGObjectColor(oval);
+    GColor c = getColorGObject(oval);
     double rx = getWidthGObject(oval) / 2,
            ry = getHeightGObject(oval) / 2,
            x  = getXGObject(oval),
            y  = getYGObject(oval);
 
     if (isFilled(oval)) {
-        Color c = getRealGObjectFillColor(oval);
+        GColor c = getFillColor(oval);
         filledEllipseRGBA(gw->ren, x, y, rx, ry, c.r, c.g, c.b, c.a);
     } else {
         ellipseRGBA(gw->ren, x, y, rx, ry, c.r, c.g, c.b, c.a);
@@ -264,7 +254,7 @@ static inline void drawGOvalOp(GWindow gw, GOval oval)
 
 static inline void drawGPolyOp(GWindow gw, GPolygon poly)
 {
-    Color    c  = getRealGObjectColor(poly);
+    GColor    c  = getColorGObject(poly);
 
     Vector   v  = getVertices(poly);
     int      n  = sizeVector(v);
@@ -293,7 +283,7 @@ TTF_Font *getRealFont(GLabel label);
 static void drawGLabelOp(GWindow gw, GLabel label)
 {
     if (!*getLabel(label)) return;
-    Color _c = getRealGObjectColor(label);
+    GColor _c = getColorGObject(label);
     SDL_Color c = {_c.r, _c.b, _c.g, _c.a };
     SDL_Surface *surface = TTF_RenderText_Solid(getRealFont(label), getLabel(label), c);
     if (!surface) {
@@ -309,24 +299,26 @@ static void drawGLabelOp(GWindow gw, GLabel label)
 
 static void drawOp(GObject gobj, GWindow gw)
 {
-    if (_getGObjectType(gobj) == GCOMPOUND) {
+    if (getType(gobj) == GCOMPOUND) {
         GCOMPOUND_APPLY(gobj, drawOp, gw);
         return;
     }
     if (!isVisibleGObject(gobj)) return;
 
-    Color orig = getRealGWindowColor(gw);
+    GColor orig = getColorGWindow(gw);
 
-    switch (_getGObjectType(gobj)) {
+    switch (getType(gobj)) {
     case GRECT: drawGRectOp(gw, gobj);  break;
     case GLINE: drawGLineOp(gw, gobj);  break;
     case GPOLYGON: drawGPolyOp(gw, gobj); break;
     case GOVAL: drawGOvalOp(gw, gobj); break;
     case GLABEL: drawGLabelOp(gw, gobj); break;
+    default: error("Drawing is unimplemented for this type");
     }
     setColorGWindow(gw, orig);
 
 }
+
 void draw(GWindow gw, GObject gobj)
 {
     drawOp(gobj,gw);
@@ -343,7 +335,7 @@ void drawAt(GWindow gw, GObject gobj, double x, double y)
 
 void addGWindow(GWindow gw, GObject gobj)
 {
-    if (_getGObjectType(gobj) == GCOMPOUND) {
+    if (getType(gobj) == GCOMPOUND) {
         GCOMPOUND_APPLY(gobj, setWindow, gw);
     }
     setWindow(gobj, gw);

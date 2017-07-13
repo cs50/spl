@@ -29,7 +29,7 @@
 #include "gmath.h"
 #include "gobjects.h"
 #include "gwindow.h"
-#include "color.h"
+#include "gcolor.h"
 #include "private/helpers.h"
 
 #include <stdio.h>
@@ -121,8 +121,8 @@ struct GObjectCDT {
     double width;
     double height;
     int type;
-    Color color;
-    Color fillColor;
+    GColor color;
+    GColor fillColor;
 };
 
 /* Prototypes that are sometimes missing from math.h */
@@ -163,7 +163,7 @@ static GObject newGObject(int type)
     gobj->y = 0;
     gobj->width = 0;
     gobj->height = 0;
-    gobj->color.full = BLACK;
+    gobj->color = BLACK;
     gobj->fillColor.full = 0;
     gobj->parent = NULL;
     gobj->win = NULL;
@@ -261,7 +261,7 @@ GRectangle getBounds(GObject gobj)
     }
 }
 
-static inline void setColorGObjectOp(GObject gobj, Color col)
+static inline void setColorGObjectOp(GObject gobj, GColor col)
 {
     if (gobj->type == GCOMPOUND)
         GCOMPOUND_APPLY(gobj, setColorGObjectOp, col);
@@ -269,7 +269,8 @@ static inline void setColorGObjectOp(GObject gobj, Color col)
     col.a = gobj->color.a;
     gobj->color = col;
 }
-void setColorGObject(GObject gobj, Color col)
+
+void setColorGObject(GObject gobj, GColor col)
 {
     col.a = gobj->color.a;
     if (col.full == gobj->color.full)
@@ -278,9 +279,9 @@ void setColorGObject(GObject gobj, Color col)
     repaintObj(gobj);
 }
 
-string getColorGObject(GObject gobj)
+GColor getColorGObject(GObject gobj)
 {
-    return (string) mapColorString(gobj->color);
+    return gobj->color;
 }
 
 static inline void setVisibleGObjectOp(GObject gobj, bool flag)
@@ -354,45 +355,19 @@ bool containsGObject(GObject gobj, double x, double y)
     }
 }
 
-Color getRealGObjectColor(GObject gobj)
+GColor getRealGObjectColor(GObject gobj)
 {
     return gobj->color;
 }
 
-Color getRealGObjectFillColor(GObject gobj)
+GColor getRealGObjectFillColor(GObject gobj)
 {
     return gobj->fillColor;
 }
 
-int _getGObjectType(GObject gobj)
+GObjectType getType(GObject gobj)
 {
     return gobj->type;
-}
-
-string getType(GObject gobj)
-{
-    switch (gobj->type) {
-    case GARC:
-        return "GArc";
-    case GCOMPOUND:
-        return "GCompound";
-    case GIMAGE:
-        return "GImage";
-    case GLABEL:
-        return "GLabel";
-    case GLINE:
-        return "GLine";
-    case GOVAL:
-        return "GOval";
-    case GPOLYGON:
-        return "GPolygon";
-    case GRECT:
-        return "GRect";
-    case GROUNDRECT:
-        return "GRoundRect";
-    default:
-        error("Attempting to call getType on an object with unexpected type");
-    }
 }
 
 GObject getParent(GObject gobj)
@@ -455,7 +430,7 @@ bool isFilled(GObject gobj)
     return gobj->fillColor.a != 0;
 }
 
-static inline void setFillColorOp(GObject gobj, Color c)
+static inline void setFillColorOp(GObject gobj, GColor c)
 {
     if (gobj->type == GCOMPOUND)
         GCOMPOUND_APPLY(gobj, setFillColorOp, c);
@@ -463,10 +438,9 @@ static inline void setFillColorOp(GObject gobj, Color c)
     gobj->fillColor = c;
 
 }
-void setFillColor(GObject gobj, string color)
+void setFillColor(GObject gobj, GColor c)
 {
-    Color c = {.full = 0};
-    assert(mapStringColor(color, &c));
+    /*assert(mapStringColor(color, &c));*/
 
     if (gobj->type != GCOMPOUND && gobj->fillColor.full == c.full) {
         return;
@@ -479,9 +453,9 @@ void setFillColor(GObject gobj, string color)
     repaintObj(gobj);
 }
 
-string getFillColor(GObject gobj)
+GColor getFillColor(GObject gobj)
 {
-    return (string) mapColorString(gobj->fillColor);
+    return gobj->fillColor;
 }
 
 /*

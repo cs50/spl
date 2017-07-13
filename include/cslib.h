@@ -39,7 +39,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include  "color.h"
+#include  "gcolor.h"
 
 #if __STDC_VERSION__ == 201112L
 #   define NORETURN _Noreturn

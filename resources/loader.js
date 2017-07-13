@@ -13,6 +13,7 @@ function toggleOutput() {
 var statusElement = document.getElementById('status');
 var progressElement = document.getElementById('progress');
 var spinnerElement = document.getElementById('spinner');
+var canvasElement = document.getElementById('canvas');
 
 var Module = {
     preRun: [],
@@ -40,13 +41,12 @@ var Module = {
         console.error(text);
     },
     canvas: (function() {
-        var canvas = document.getElementById('canvas');
-        canvas.addEventListener("webglcontextlost", function(e) {
+        canvasElement.addEventListener("webglcontextlost", function(e) {
             alert('WebGL context lost. You will need to reload the page.');
             e.preventDefault();
         }, false);
 
-        return canvas;
+        return canvasElement;
     })(),
     setStatus: function(text) {
         if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
@@ -71,7 +71,15 @@ var Module = {
     totalDependencies: 0,
     monitorRunDependencies: function(left) {
         this.totalDependencies = Math.max(this.totalDependencies, left);
-        Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+        if (left) {
+            Module.setStatus('Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')');
+        } else {
+            Module.setStatus("All downloads complete");
+            var toShow = document.getElementsByClassName("wait");
+            for (let i = 0; i != toShow.length; i++) {
+                toShow[i].style.display = "block";
+            }
+        }
     }
 };
 
