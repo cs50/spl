@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Breakout</title>
+        <link rel="stylesheet" href="resources/breakout.css"/>
+    </head>
+
+    <body>
+        <div id="spinner"></div>
+        <p id="status">Downloading...</p>
+
+        <span id="controls">
+            <span><input type="button" value="Fullscreen" onclick="Module.requestFullscreen(false, false)"></span>
+            <span><input id="show" type="button" value="Show console" onclick="toggleOutput()"></span>
+        </span>
+
+        <div class="emscripten">
+            <progress value="0" max="100" id="progress" hidden=1></progress>
+        </div>
+
+        <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+
+        <textarea id="output" rows="8"></textarea>
+        <script type="text/javascript" src="resources/loader.js"></script>
+    </body>
+</html>

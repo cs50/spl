@@ -48,9 +48,9 @@
  */
 
 struct VectorCDT {
-   void **elements;
-   int count;
-   int capacity;
+    void **elements;
+    int count;
+    int capacity;
 };
 
 /* Private function prototypes */
@@ -59,161 +59,134 @@ static void expandCapacity(Vector vector);
 
 /* Exported entries */
 
-Vector newVector(void) {
-   Vector vector;
-
-   vector = newBlock(Vector);
-   vector->elements = newArray(INITIAL_CAPACITY, void *);
-   vector->count = 0;
-   vector->capacity = INITIAL_CAPACITY;
-   return vector;
+Vector newVector(void)
+{
+    Vector vector = newBlock(Vector);
+    vector->elements = calloc(INITIAL_CAPACITY, sizeof *vector->elements);
+    if (!vector->elements) error("Memory allocation failure");
+    vector->count = 0;
+    vector->capacity = INITIAL_CAPACITY;
+    return vector;
 }
 
-void freeVector(Vector vector) {
-   freeBlock(vector->elements);
-   freeBlock(vector);
+void freeVector(Vector vector)
+{
+    free(vector->elements);
+    freeBlock(vector);
 }
 
-Vector arrayToVector(void *array[], int n) {
-   Vector vector;
-   int i;
-
-   if (array == NULL) return NULL;
-   vector = newBlock(Vector);
-   vector->elements = newArray(n, void *);
-   vector->count = n;
-   vector->capacity = n;
-   for (i = 0; i < n; i++) {
-      vector->elements[i] = array[i];
-   }
-   return vector;
+bool isEmptyVector(Vector vector)
+{
+    return vector->count == 0;
 }
 
-void **vectorToArray(Vector vector) {
-   void **array;
-   int i, n;
-
-   if (vector == NULL) return NULL;
-   n = vector->count;
-   array = newArray(n + 1, void *);
-   for (i = 0; i < n; i++) {
-      array[i] = vector->elements[i];
-   }
-   array[n] = NULL;
-   return array;
+int sizeVector(Vector vector)
+{
+    return vector->count;
 }
 
-bool isEmptyVector(Vector vector) {
-   return vector->count == 0;
+void clearVector(Vector vector)
+{
+    vector->count = 0;
 }
 
-int sizeVector(Vector vector) {
-   return vector->count;
+void *getVector(Vector vector, int index)
+{
+    if (index < 0 || index >= vector->count) {
+        error("get: Index value out of range");
+    }
+    return vector->elements[index];
 }
 
-void clearVector(Vector vector) {
-   vector->count = 0;
+void setVector(Vector vector, int index, void *value)
+{
+    if (index < 0 || index >= vector->count) {
+        error("get: Index value out of range");
+    }
+    vector->elements[index] = value;
 }
 
-Vector cloneVector(Vector vector) {
-   Vector newvec;
-   int i;
-
-   newvec = newBlock(Vector);
-   newvec->count = vector->count;
-   newvec->capacity = vector->capacity;
-   newvec->elements = newArray(vector->capacity, void *);
-   for (i = 0; i < vector->count; i++) {
-      newvec->elements[i] = vector->elements[i];
-   }
-   return newvec;
+void addVector(Vector vector, void *value)
+{
+    if (vector->count == vector->capacity) {
+        expandCapacity(vector);
+    }
+    vector->elements[vector->count++] = value;
 }
 
-void *getVector(Vector vector, int index) {
-   if (index < 0 || index >= vector->count) {
-      error("get: Index value out of range");
-   }
-   return vector->elements[index];
+void insert(Vector vector, int index, void *value)
+{
+    if (index < 0 || index > vector->count) {
+        error("insert: Index value out of range");
+    }
+    if (vector->count == vector->capacity) {
+        expandCapacity(vector);
+    }
+    void **inserted = vector->elements + index;
+    memmove(inserted+1, inserted, (vector->count++ - index) * sizeof (void*));
+    *inserted = value;
 }
 
-void setVector(Vector vector, int index, void *value) {
-   if (index < 0 || index >= vector->count) {
-      error("get: Index value out of range");
-   }
-   vector->elements[index] = value;
+void insertAt(Vector vector, int index, void *value)
+{
+    insert(vector, index, value);
 }
 
-void addVector(Vector vector, void *value) {
-   if (vector->count == vector->capacity) {
-      expandCapacity(vector);
-   }
-   vector->elements[vector->count++] = value;
+void removeVector(Vector vector, int index)
+{
+    if (index < 0 || index >= vector->count) {
+        error("remove: Index value out of range");
+    }
+    void **removed = vector->elements + index;
+    memmove(removed, removed+1, (--vector->count - index) * sizeof (void *));
 }
 
-void insert(Vector vector, int index, void *value) {
-   if (index < 0 || index > vector->count) {
-      error("insert: Index value out of range");
-   }
-   if (vector->count == vector->capacity) {
-      expandCapacity(vector);
-   }
-   void **inserted = vector->elements + index;
-   memmove(inserted+1, inserted, (vector->count++ - index) * sizeof (void*));
-   *inserted = value;
-}
-
-void insertAt(Vector vector, int index, void *value) {
-   insert(vector, index, value);
-}
-
-void removeVector(Vector vector, int index) {
-   if (index < 0 || index >= vector->count) {
-      error("remove: Index value out of range");
-   }
-   void **removed = vector->elements + index;
-   memmove(removed, removed+1, (--vector->count - index) * sizeof (void *));
-}
-
-void removeAt(Vector vector, int index) {
-   removeVector(vector, index);
+void removeAt(Vector vector, int index)
+{
+    removeVector(vector, index);
 }
 
 /* Private functions */
 
-static void expandCapacity(Vector vector) {
-   void **array;
-   int i, newCapacity;
+static void expandCapacity(Vector vector)
+{
+    void **array;
+    int i, newCapacity;
 
-   newCapacity = vector->capacity * 2;
-   array = newArray(newCapacity, void *);
-   for (i = 0; i < vector->count; i++) {
-      array[i] = vector->elements[i];
-   }
-   freeBlock(vector->elements);
-   vector->elements = array;
-   vector->capacity = newCapacity;
+    newCapacity = vector->capacity * 2;
+    array = calloc(newCapacity, sizeof *array);
+    for (i = 0; i < vector->count; i++) {
+        array[i] = vector->elements[i];
+    }
+    freeBlock(vector->elements);
+    vector->elements = array;
+    vector->capacity = newCapacity;
 }
 
 
 #define swap(X,Y) do { __typeof__(X) T = X; X = Y; Y = T; } while (0);
-void sendForwardVector(Vector vector, int index) {
+void sendForwardVector(Vector vector, int index)
+{
     if (index < 0 || index >= vector->count-1) return;
     swap(vector->elements[index], vector->elements[index+1]);
 }
 
-void sendToFrontVector(Vector vector, int index) {
+void sendToFrontVector(Vector vector, int index)
+{
     if (index < 0 || index >= vector->count-1) return;
     void *temp = vector->elements[index];
     removeVector(vector, index);
     addVector(vector, temp);
 }
 
-void sendBackwardVector(Vector vector, int index) {
+void sendBackwardVector(Vector vector, int index)
+{
     if (index <= 0 || index >= vector->count) return;
     swap(vector->elements[index], vector->elements[index+1]);
 }
 
-void sendToBackVector(Vector vector, int index) {
+void sendToBackVector(Vector vector, int index)
+{
     if (index <= 0 || index >= vector->count) return;
     void *temp = vector->elements[index];
     memmove(vector->elements + 1, vector->elements, index * sizeof (void *));

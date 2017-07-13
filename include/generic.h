@@ -72,7 +72,7 @@ bool containsGeneric(int size, ...);
  * for details.
  */
 
-void add(void *arg, ...);
+void add(void *container, void *item);
 
 /*
  * Function: remove
@@ -83,7 +83,7 @@ void add(void *arg, ...);
  * type for details.
  */
 
-void remove(void *arg, ...);
+void remove(void *container, void *item);
 
 /*
  * Function: getX

@@ -1,0 +1,16 @@
+%{
+#include <string.h>
+#include "cslib.h"
+%}
+struct TypeMap {const char *name; unsigned char code;};
+%%
+GObject, GOBJECT
+GWindow, GWINDOW
+GEvent, GEVENT
+Vector, VECTOR
+%%
+
+unsigned char mapType(char const *str) {
+    struct TypeMap const *t = in_type_set(str, strlen(str));
+    return t ? t->code : UNKNOWN;
+}

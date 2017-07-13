@@ -3,13 +3,14 @@ obj/*
 bc/*
 *.o
 src/color.c
+src/typemap.c
 breakout
-*.js
+breakout.js
 *.mem
-*.html
 */.libs
 *.lo
 *.la
 */.deps
 *.bin
 *.data
+*.wasm

@@ -13,10 +13,8 @@ OBJDIR  = obj
 INCDIR  = include
 BCDIR   = bc
 
-SRCS = $(wildcard $(SRCDIR)/*.c)
-INCS = $(wildcard $(INCDIR)/*.h)
-OBJS = $(OBJDIR)/color.o $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-BCS  = $(BCDIR)/breakout_em.bc $(OBJS:$(OBJDIR)/%.o=$(BCDIR)/%.bc)
+SRCS = $(SRCDIR)/typemap.c $(SRCDIR)/color.c $(wildcard $(SRCDIR)/*.c)
+OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 GFX_DIR = SDL2_gfx-1.0.3
 GFX_LIB_DIR = $(GFX_DIR)/.libs
@@ -32,21 +30,17 @@ $(shell `mkdir -p $(OBJDIR) $(BCDIR)`)
 .PHONY: all
 all: $(TARGET)
 
-breakout: $(TARGET) breakout.c
-	$(CC) -L. $(CFLAGS) -o $@ $^ $(LDFLAGS) -l$(NAME) -lSDL2main
+breakout_native: $(TARGET) breakout.c
+	$(CC) -L. $(CFLAGS) -o breakout $^ $(LDFLAGS) -l$(NAME) -lSDL2main
 
 
 $(TARGET): $(OBJS)
 	$(CC) -shared $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(BCDIR)/%.bc: $(SRCDIR)/%.c $(INCS) Makefile
-	$(EMCC) -MMD $(EMCFLAGS) -o $@ $<
-
-$(BCDIR)/breakout_em.bc: breakout_em.c
-	$(EMCC) -MMD $(EMCFLAGS) -o $@ $<
-
-breakout_em: $(BCS) $(GFX)
-	$(EMCC) --separate-asm -s EMTERPRETIFY_FILE=\'$@.bin\' $(EMCFLAGS) -o $@.html $^ $(GFX)
+breakout: $(SRCS) $(GFX) breakout.c $(INCS) Makefile
+	$(EMCC) -MMD $(EMCFLAGS) $(GFX) -o $(BCDIR)/libSDL2_gfx.bc
+	$(EMCC) -MMD $(EMCFLAGS) $(SRCS) -o $(BCDIR)/libspl.bc
+	$(EMCC) -s EMTERPRETIFY_FILE=\'$@.bin\' $(EMCFLAGS) -o $@.js breakout.c $(BCDIR)/libspl.bc $(BCDIR)/libSDL2_gfx.bc
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCS) Makefile
 	$(CC) $(CFLAGS) -MMD -c -o $@ $< $(LDFLAGS)
@@ -54,6 +48,9 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCS) Makefile
 
 $(SRCDIR)/color.c: $(SRCDIR)/color.gperf
 	gperf --ignore-case -F",0" -Ct  $^  --output-file $@
+
+$(SRCDIR)/typemap.c: $(SRCDIR)/typemap.gperf
+	gperf --ignore-case -N"in_type_set" -F",UNKNOWN" -Ct  $^  --output-file $@
 
 $(GFX): 
 	cd $(GFX_DIR); EMCONFIGURE_JS=1 $(EMCONF) ./configure --disable-mmx
@@ -65,6 +62,6 @@ $(GFX):
 
 .PHONY: clean
 clean:
-	rm -f core $(TARGET) src/color.c breakout
+	rm -f core $(TARGET) src/color.c src/typemap.c breakout vgcore.*
 	rm -f -r $(OBJDIR) $(BCDIR)
-	rm -f breakout_em.{js,asm.js,html,data,bin,mem,html.mem}
+	rm -f breakout.{js,wasm,data,bin,mem}

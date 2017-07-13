@@ -25,7 +25,7 @@ yellow,YELLOW
 
 bool mapStringColor(char const *str, Color *col) {
     struct ColorMap const *w = in_word_set(str, strlen(str));
-    if (!w) return false;
+    if (!w || !w->name) return false;
     col->full = w->color;
     return true;
 }

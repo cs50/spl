@@ -63,6 +63,7 @@ GObject detectCollision(GWindow window, GOval ball);
 
 int main(int argc, char* argv[])
 {
+    printf("v.3.0\n");
 
     // seed pseudorandom number generator
     srand48(time(NULL));
@@ -113,15 +114,18 @@ int main(int argc, char* argv[])
         }
 
         // vertical velocity of ball
-        double vy = 3.0;
+        double vy = 5.0;
 
         // while bricks remain and the ball's not missed the paddle
         while (bricks > 0 && getY(ball) < HEIGHT - 2 * RADIUS)
         {
+    
             // check for mouse event
+            /*GEvent e = getNextEvent(MOUSE_EVENT);*/
             GEvent e = getNextEvent(MOUSE_EVENT);
 
             // if we heard one
+            
             if (e != NULL)
             {
                 // if the event was movement
@@ -139,11 +143,13 @@ int main(int argc, char* argv[])
                     }
                     setLocation(paddle, px, getY(paddle));
                 }
+                freeEvent(e);
             }
 
             // if we didn't
             else
             {
+
                 // move ball
                 move(ball, vx, vy);
 
@@ -175,6 +181,7 @@ int main(int argc, char* argv[])
                     {
                         // remove brick from window
                         removeGWindow(window, object);
+                        freeGObject(object);
 
                         // decrement counter
                         bricks--;
@@ -191,7 +198,7 @@ int main(int argc, char* argv[])
                 }
 
                 // slow down animation
-                pause(NAPTIME);
+                /*pause(NAPTIME);*/
             }
         }
     }

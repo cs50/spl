@@ -26,56 +26,75 @@
 #include "generic.h"
 #include "gtypes.h"
 
-GPoint createGPoint(double x, double y) {
-    return (GPoint) {.x = x, .y = y};
+GPoint createGPoint(double x, double y)
+{
+    return (GPoint) {
+        .x = x, .y = y
+    };
 }
 
-double getXGPoint(GPoint pt) {
+double getXGPoint(GPoint pt)
+{
     return pt.x;
 }
 
-double getYGPoint(GPoint pt) {
+double getYGPoint(GPoint pt)
+{
     return pt.y;
 }
 
-GDimension createGDimension(double width, double height) {
-    return (GDimension) {.width = width, .height = height};
+GDimension createGDimension(double width, double height)
+{
+    return (GDimension) {
+        .width = width, .height = height
+    };
 }
 
-double getWidthGDimension(GDimension dim) {
+double getWidthGDimension(GDimension dim)
+{
     return dim.width;
 }
 
-double getHeightGDimension(GDimension dim) {
+double getHeightGDimension(GDimension dim)
+{
     return dim.height;
 }
 
-GRectangle createGRectangle(double x, double y, double width, double height) {
-    return (GRectangle) {.x = x, .y = y, .width = width, .height = height };
+GRectangle createGRectangle(double x, double y, double width, double height)
+{
+    return (GRectangle) {
+        .x = x, .y = y, .width = width, .height = height
+    };
 }
 
-double getXGRectangle(GRectangle r) {
+double getXGRectangle(GRectangle r)
+{
     return r.x;
 }
 
-double getYGRectangle(GRectangle r) {
+double getYGRectangle(GRectangle r)
+{
     return r.y;
 }
 
-double getWidthGRectangle(GRectangle r) {
+double getWidthGRectangle(GRectangle r)
+{
     return r.width;
 }
 
-double getHeightGRectangle(GRectangle r) {
+double getHeightGRectangle(GRectangle r)
+{
     return r.height;
 }
 
-bool isEmptyGRectangle(GRectangle r) {
+bool isEmptyGRectangle(GRectangle r)
+{
     return r.width <= 0 || r.height <= 0;
 }
 
-bool containsGRectangle(GRectangle r, GPoint pt) {
+bool containsGRectangle(GRectangle r, GPoint pt)
+{
     return pt.x >= r.x && pt.y >= r.y && pt.x < r.x + r.width
-        && pt.y < r.y + r.height;
+           && pt.y < r.y + r.height;
 }
 

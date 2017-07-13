@@ -30,223 +30,180 @@
 #include "gevents.h"
 #include "gobjects.h"
 #include "gtypes.h"
-#include "strlib.h"
 #include "vector.h"
 
 #include "color.h"
 
-/* Constants */
+#if (__STDC_VERSION__ >= 201112L)
+    #define static_assert(pred, msg) _Static_assert(pred, msg)
+#else
+    #define ASSERT_CONCAT_(a, b) a##b
+    #define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
+    #define static_assert(pred, _unused) enum { ASSERT_CONCAT(assertion_line, __LINE__) = 1 / (int) pred } // This error means that fuck you
+#endif
 
-#define BUFSIZE 40
+static_assert(sizeof (GPoint) != sizeof (GObject),
+               "SPL will not work on an architecture in which "
+               "GPoint is the same size as GObject");
 
-bool isEmptyGeneric(int size, ...) {
+static_assert(sizeof (GRectangle) != sizeof (GObject),
+               "SPL will not work on an architecture in which "
+               "GRectangle is the same size as GObject");
+
+bool containsGeneric(int size, ...)
+{
     va_list args;
-    void *arg;
-    bool result;
-    string type;
 
     va_start(args, size);
     if (size == sizeof(GRectangle)) {
-        result = isEmptyGRectangle(va_arg(args, GRectangle));
-        va_end(args);
-        return result;
-    }
-    arg = va_arg(args, void *);
-    va_end(args);
-    type = getBlockType(arg);
-    if (endsWith(type, "Vector")) {
-        return isEmptyVector((Vector) arg);
-    } else {
-        error("isEmpty: Unrecognized type %s", type);
-    }
-}
-
-bool containsGeneric(int size, ...) {
-    string type;
-    void *arg;
-    double x, y;
-    bool result;
-    va_list args;
-    GRectangle r;
-    GPoint pt;
-
-    va_start(args, size);
-    if (size == sizeof(GRectangle)) {
-        r = va_arg(args, GRectangle);
-        pt = va_arg(args, GPoint);
+        GRectangle r = va_arg(args, GRectangle);
+        GPoint pt = va_arg(args, GPoint);
         va_end(args);
         return containsGRectangle(r, pt);
     }
-    arg = va_arg(args, void *);
-    type = getBlockType(arg);
-    if (endsWith(type, "GObject")) {
-        x = va_arg(args, double);
-        y = va_arg(args, double);
-        result = containsGObject((GObject) arg, x, y);
+    void *arg = va_arg(args, void *);
+    unsigned char type = getBlockType(arg);
+    if (type == GOBJECT) {
+        double x = va_arg(args, double);
+        double y = va_arg(args, double);
+        bool result = containsGObject((GObject) arg, x, y);
         va_end(args);
         return result;
     } else {
-        error("contains: Unrecognized type %s", type);
+        error("contains: Unrecognized type");
     }
 }
 
-void add(void *arg, ...) {
-    string type;
-    void *value;
-    va_list args;
+int _getGObjectType(GObject);
 
-    type = getBlockType(arg);
-    if (endsWith(type, "Vector")) {
-        va_start(args, arg);
-        value = va_arg(args, void *);
-        va_end(args);
-        addVector((Vector) arg, value);
-    } else if (endsWith(type, "GWindow")) {
-        va_start(args, arg);
-        addGWindow((GWindow) arg, va_arg(args, GObject));
-        va_end(args);
-    } else if (endsWith(type, "GCompound")) {
-        va_start(args, arg);
-        addGCompound((GWindow) arg, va_arg(args, GObject));
-        va_end(args);
+void add(void *container, void *item)
+{
+    if (getBlockType(item) != GOBJECT) {
+        error("Object to be added does not appear to be a GOBJECT");
+    }
+
+    unsigned char type = getBlockType(container);
+    if (type == GWINDOW) {
+        addGWindow(container, item);
+    } else if (type == GOBJECT && _getGObjectType(container) == GCOMPOUND) {
+        addGCompound(container, item);
     } else {
-        error("add: Unrecognized type %s", type);
+        error("add: Unrecognized type");
     }
 }
 
-void remove(void *arg, ...) {
-    GObject gobj;
-    string type;
-    int index;
-    va_list args;
+void remove(void *container, void *item)
+{
+    if (getBlockType(item) != GOBJECT) {
+        error("Object to be removed does not appear to be a GOBJECT");
+    }
 
-    type = getBlockType(arg);
-    if (endsWith(type, "Vector")) {
-        va_start(args, arg);
-        index = va_arg(args, int);
-        va_end(args);
-        removeVector((Vector) arg, index);
-        va_end(args);
-    } else if (endsWith(type, "GWindow")) {
-        va_start(args, arg);
-        gobj = va_arg(args, GObject);
-        va_end(args);
-        removeGWindow((GWindow) arg, gobj);
+    unsigned char type = getBlockType(container);
+    if (type == GWINDOW) {
+        removeGWindow(container, item);
+    } else if (type == GOBJECT && _getGObjectType(container) == GCOMPOUND) {
+        removeGCompound(container, item);
     } else {
-        error("remove: Unrecognized type %s", type);
+        error("remove: Unrecognized type");
     }
 }
 
-double getXGeneric(int size, ...) {
+double getXGeneric(int size, ...)
+{
     va_list args;
-    GPoint pt;
-    GRectangle r;
-    void *arg;
-    string type;
-
     va_start(args, size);
     if (size == sizeof(GPoint)) {
-        pt = va_arg(args, GPoint);
+        GPoint pt = va_arg(args, GPoint);
         va_end(args);
         return getXGPoint(pt);
     } else if (size == sizeof(GRectangle)) {
-        r = va_arg(args, GRectangle);
+        GRectangle r = va_arg(args, GRectangle);
         va_end(args);
         return getXGRectangle(r);
     }
-    arg = va_arg(args, void *);
+
+    void *arg = va_arg(args, void *);
     va_end(args);
-    type = getBlockType(arg);
-    if (endsWith(type, "GEvent")) {
-        return getXGEvent((GEvent) arg);
-    } else if (endsWith(type, "GObject")) {
-        return getXGObject((GObject) arg);
+    unsigned char type = getBlockType(arg);
+    if (type == GEVENT) {
+        return getXGEvent(arg);
+    } else if (type == GOBJECT) {
+        return getXGObject(arg);
     } else {
         error("getX: Illegal argument type");
     }
 }
 
-double getYGeneric(int size, ...) {
+double getYGeneric(int size, ...)
+{
     va_list args;
-    GPoint pt;
-    GRectangle r;
-    void *arg;
-    string type;
 
     va_start(args, size);
     if (size == sizeof(GPoint)) {
-        pt = va_arg(args, GPoint);
+        GPoint pt = va_arg(args, GPoint);
         va_end(args);
         return getYGPoint(pt);
     } else if (size == sizeof(GRectangle)) {
-        r = va_arg(args, GRectangle);
+        GRectangle r = va_arg(args, GRectangle);
         va_end(args);
         return getYGRectangle(r);
     }
-    arg = va_arg(args, void *);
+    void *arg = va_arg(args, void *);
     va_end(args);
-    type = getBlockType(arg);
-    if (endsWith(type, "GEvent")) {
+    unsigned char type = getBlockType(arg);
+    if (type == GEVENT) {
         return getYGEvent((GEvent) arg);
-    } else if (endsWith(type, "GObject")) {
+    } else if (type == GOBJECT) {
         return getYGObject((GObject) arg);
     } else {
         error("getY: Illegal argument type");
     }
 }
 
-double getWidthGeneric(int size, ...) {
+double getWidthGeneric(int size, ...)
+{
     va_list args;
-    GDimension dim;
-    GRectangle r;
-    string type;
-    void *arg;
-
     va_start(args, size);
     if (size == sizeof(GDimension)) {
-        dim = va_arg(args, GDimension);
+        GDimension dim = va_arg(args, GDimension);
         va_end(args);
         return getWidthGDimension(dim);
     } else if (size == sizeof(GRectangle)) {
-        r = va_arg(args, GRectangle);
+        GRectangle r = va_arg(args, GRectangle);
         va_end(args);
         return getWidthGRectangle(r);
     }
-    arg = va_arg(args, void *);
+    void *arg = va_arg(args, void *);
     va_end(args);
-    type = getBlockType(arg);
-    if (endsWith(type, "GWindow")) {
-        return getWidthGWindow((GWindow) arg);
-    } else if (endsWith(type, "GObject")) {
+    unsigned char type = getBlockType(arg);
+    if (type == GWINDOW) {
+        return getWidthGWindow(arg);
+    } else if (type == GOBJECT) {
         return getWidthGObject((GObject) arg);
     } else {
         error("getWidth: Illegal argument type");
     }
 }
 
-double getHeightGeneric(int size, ...) {
+double getHeightGeneric(int size, ...)
+{
     va_list args;
-    GDimension dim;
-    GRectangle r;
-    string type;
-    void *arg;
-
     va_start(args, size);
     if (size == sizeof(GDimension)) {
-        dim = va_arg(args, GDimension);
+        GDimension dim = va_arg(args, GDimension);
         va_end(args);
         return getHeightGDimension(dim);
     } else if (size == sizeof(GRectangle)) {
-        r = va_arg(args, GRectangle);
+        GRectangle r = va_arg(args, GRectangle);
         va_end(args);
         return getHeightGRectangle(r);
     }
-    arg = va_arg(args, void *);
+    void *arg = va_arg(args, void *);
     va_end(args);
-    type = getBlockType(arg);
-    if (endsWith(type, "GWindow")) {
+    unsigned char type = getBlockType(arg);
+    if (type == GWINDOW) {
         return getHeightGWindow((GWindow) arg);
-    } else if (endsWith(type, "GObject")) {
+    } else if (type == GOBJECT) {
         return getHeightGObject((GObject) arg);
     } else {
         error("getHeight: Illegal argument type");
@@ -254,45 +211,44 @@ double getHeightGeneric(int size, ...) {
 }
 
 
-void setVisible(void *arg, bool flag) {
-    string type;
-
-    type = getBlockType(arg);
-    if (endsWith(type, "GObject")) {
-        setVisibleGObject((GObject) arg, flag);
-    } else if (endsWith(type, "GWindow")) {
-        setVisibleGWindow((GWindow) arg, flag);
+void setVisible(void *arg, bool flag)
+{
+    unsigned char type = getBlockType(arg);
+    if (type == GOBJECT) {
+        setVisibleGObject(arg, flag);
+    } else if (type == GWINDOW) {
+        setVisibleGWindow(arg, flag);
     } else {
-        error("setVisible: Unrecognized type %s", type);
+        error("setVisible: Unrecognized type");
     }
 }
 
-bool isVisible(void *arg) {
-    string type;
-
-    type = getBlockType(arg);
-    if (endsWith(type, "GObject")) {
-        return isVisibleGObject((GObject) arg);
-    } else if (endsWith(type, "GWindow")) {
-        return isVisibleGWindow((GWindow) arg);
+bool isVisible(void *arg)
+{
+    unsigned char type = getBlockType(arg);
+    if (type == GOBJECT) {
+        return isVisibleGObject(arg);
+    } else if (type == GWINDOW) {
+        return isVisibleGWindow(arg);
     } else {
-        error("isVisible: Unrecognized type %s", type);
+        error("isVisible: Unrecognized type");
     }
 }
 
-void setColor(void *arg, string color) {
-    string type = getBlockType(arg);
+void setColor(void *arg, string color)
+{
     Color c;
 
     if (!mapStringColor(color, &c)) {
         error("setColor: Unrecognized color: %s", color);
     }
 
-    if (endsWith(type, "GObject")) {
-        setColorGObject((GObject) arg, c);
-    } else if (endsWith(type, "GWindow")) {
+    unsigned char type = getBlockType(arg);
+    if (type == GOBJECT) {
+        setColorGObject(arg, c);
+    } else if (type == GWINDOW) {
         setColorGWindow((GWindow) arg, c);
     } else {
-        error("setColor: Unrecognized type %s", type);
+        error("setColor: Unrecognized type");
     }
 }

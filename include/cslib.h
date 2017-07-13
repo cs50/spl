@@ -67,6 +67,15 @@ typedef char *string;
 
 /* Section 2 -- Memory allocation */
 
+// Types we need to be generic over
+enum {
+    UNKNOWN,
+    GOBJECT,
+    GWINDOW,
+    GEVENT,
+    VECTOR,
+};
+
 /*
  * General notes
  * -------------
@@ -88,17 +97,7 @@ typedef char *string;
  * available, <code>getBlock</code> generates an error.
  */
 
-void *getBlock(size_t nbytes);
-
-/*
- * Private function: getTypedBlock
- * -------------------------------
- * Returns a block with the indicated type marker.  This function is
- * called from the <code>newBlock</code> and <code>newArray</code>
- * macros and should not be invoked by clients.
- */
-
-void *getTypedBlock(size_t nbytes, string type);
+void *getBlock(size_t nbytes, unsigned char type);
 
 /*
  * Function: freeBlock
@@ -125,25 +124,8 @@ void freeBlock(void *ptr);
  * string is constant and should not be freed.
  */
 
-string getBlockType(void *ptr);
+unsigned char getBlockType(void *ptr);
 
-/*
- * Function: setBlockData
- * Usage: setBlockData(ptr, value);
- * --------------------------------
- * Sets the data field inside the block to the specified value.
- */
-
-void setBlockData(void *ptr, void *value);
-
-/*
- * Function: getBlockData
- * Usage: value = getBlockData(ptr);
- * ---------------------------------
- * Returns the data field inside the block.
- */
-
-void *getBlockData(void *ptr);
 
 /*
  * Macro: newBlock
@@ -156,18 +138,11 @@ void *getBlockData(void *ptr);
  * pointer type and the latter takes the target type.
  */
 
-#define newBlock(type) ((type) getTypedBlock(sizeof *((type) NULL), #type))
 
-/*
- * Macro: newArray
- * Usage: ptr = newArray(n, type);
- * -------------------------------
- * Allocates enough space to hold an array of <code>n</code> values
- * of the specified type.
- */
+// Defined in src/typemap.gperf
+unsigned char mapType(char const *str);
 
-#define newArray(n, type) \
-   ((type *) getTypedBlock((n) * sizeof(type), #type "[]"))
+#define newBlock(type) getBlock(sizeof *((type) NULL), mapType(#type))
 
 /* Section 3 -- error handling */
 

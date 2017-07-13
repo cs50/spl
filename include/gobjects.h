@@ -439,43 +439,6 @@ GRoundRect newGRoundRect(double x, double y, double width, double height,
                                              double corner);
 
 /*
- * Type: G3DRect
- * -------------
- * This type represents a rectangular box that can appear raised or lowered.
- */
-
-typedef GRect G3DRect;
-
-/*
- * Function: newG3DRect
- * Usage: G3DRect rect = newG3DRect(x, y, width, height, raised);
- * --------------------------------------------------------------
- * Creates a new <code>G3DRect</code> with the specified dimensions.
- * The <code>corner</code> parameter specifies whether this rectangle
- * should appear raised.
- */
-
-G3DRect newG3DRect(double x, double y, double width, double height,
-                                       bool raised);
-/*
- * Function: setRaised
- * Usage: setRaised(rect, raised);
- * -------------------------------
- * Indicates whether this object appears raised.
- */
-
-void setRaised(G3DRect rect, bool raised);
-
-/*
- * Function: isRaised
- * Usage: if (isRaised(rect)) ...
- * ------------------------------
- * Returns <code>true</code> if this object appears raised.
- */
-
-bool isRaised(G3DRect rect);
-
-/*
  * Type: GOval
  * -----------
  * This type represents an oval inscribed in a rectangular box.
@@ -981,8 +944,7 @@ typedef enum {
    GOVAL = 1<<5,
    GPOLYGON = 1<<6,
    GRECT = 1<<7,
-   G3DRECT = 1<<8,
-   GROUNDRECT = 1<<9,
+   GROUNDRECT = 1<<8,
 } GObjectTypeBits;
 
 #endif

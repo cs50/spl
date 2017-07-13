@@ -33,19 +33,22 @@
  */
 
 struct SoundCDT {
-   string filename;
+    string filename;
 };
 
-Sound newSound(string filename) {
-   Sound sound;
+Sound newSound(string filename)
+{
+    Sound sound;
 
-   sound = newBlock(Sound);
-   sound->filename = filename;
-   return sound;
+    sound = newBlock(Sound);
+    sound->filename = filename;
+    return sound;
 }
 
-void freeSound(Sound sound) {
+void freeSound(Sound sound)
+{
 }
 
-void playSound(Sound sound) {
+void playSound(Sound sound)
+{
 }

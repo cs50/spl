@@ -42,10 +42,6 @@
  *                  +---------------------+
  *     base addr -> |       password      |
  *                  +---------------------+
- *                  |  block type string  |
- *                  +---------------------+
- *                  | size of client data |
- *                  +---------------------+
  *                  | client data pointer |
  *                  +---------------------+
  *   client addr -> |          .          |
@@ -56,76 +52,37 @@
  * The password is a special value unlikely to appear as a data value.
  */
 
-typedef struct BlockHeader {
-    union {
-        size_t _password;
-        struct BlockHeader *_chain;
-    } block_union;
-    char *type;
-    size_t size;
+typedef struct {
+    struct {
+        unsigned magic : 29;
+        unsigned char type : 3;
+    };
     void *data;
 } BlockHeader;
 
-#define password block_union._password
-#define chain block_union._chain
-#define PASSWORD 314159265
+#define MAGIC 314159265
 
-/*
- * Implementation notes:
- * ---------------------
- */
-
-/* Memory allocation implementation */
-
-void *getBlock(size_t nbytes) {
-    return getTypedBlock(nbytes, "?");
-}
-
-void *getTypedBlock(size_t nbytes, string type) {
-    BlockHeader *base;
-
-    base = (BlockHeader *) malloc(nbytes + sizeof(BlockHeader));
-    if (base == NULL) error("No memory available");
-    base->password = PASSWORD;
+void *getBlock(size_t nbytes, unsigned char type)
+{
+    BlockHeader *base = calloc(nbytes + sizeof (BlockHeader), 1);
+    if (!base) error("No memory available");
+    base->magic = MAGIC;
     base->type = type;
-    base->size = nbytes;
-    base->data = NULL;
-    return (void *) ((char *) base + sizeof(BlockHeader));
+    return ((char *) base + sizeof(BlockHeader));
 }
 
-void freeBlock(void *ptr) {
-    BlockHeader *base;
-
-    base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
-    if (base->password == PASSWORD) {
-        base->password = 0;
+void freeBlock(void *ptr)
+{
+    BlockHeader *base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
+    if (base->magic == MAGIC) {
+        base->magic = 0;
         free(base);
     }
 }
 
-string getBlockType(void *ptr) {
-    BlockHeader *base;
-
-    base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
-    return (base->password == PASSWORD) ? base->type : "?";
+unsigned char getBlockType(void *ptr)
+{
+    BlockHeader *base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
+    return (base->magic == MAGIC) ? base->type : UNKNOWN;
 }
 
-void setBlockData(void *ptr, void *value) {
-    BlockHeader *base;
-
-    base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
-    if (base->password != PASSWORD) {
-        error("setBlockData: Block has not been allocated");
-    }
-    base->data = value;
-}
-
-void *getBlockData(void *ptr) {
-    BlockHeader *base;
-
-    base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
-    if (base->password != PASSWORD) {
-        error("getBlockData: Block has not been allocated");
-    }
-    return base->data;
-}
