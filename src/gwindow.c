@@ -38,6 +38,14 @@
 #include "gcolor.h"
 
 
+
+// Global list of all allocated windows. This could in theory be a dynamically
+// allocated array or linked list, but for simplicity, I've capped the number
+// of windows at 128. Any more than this would be ridiculous anyway. We do
+// linear search, which is fine; this array will fit well within a cache line.
+#define MAX_WIN 128
+static GWindow windows[MAX_WIN] = {0};
+
 void setWindow(GObject gobj, GWindow win);
 static void drawOp(GObject gobj, GWindow gw);
 static inline void drawGOvalOp(GWindow gw, GOval oval);
@@ -51,10 +59,21 @@ struct GWindowCDT {
     SDL_Renderer *ren;
 };
 
+
 GWindow newGWindow(double width, double height)
 {
+
     requiresSubsystem(SDL_INIT_VIDEO);
-    GWindow gw = newBlock(GWindow);
+
+    size_t idx = 0;
+    for (; idx != MAX_WIN; idx++) {
+    }
+
+    if (win == WIN_END) {
+        error("newGWindow: maximum number of windows created");
+    }
+
+    GWindow gw = *win = newBlock(GWindow);
     gw->contents = newGCompound();
     setWindow(gw->contents, gw);
     SDL_CreateWindowAndRenderer(width, height, 0, &gw->win, &gw->ren);

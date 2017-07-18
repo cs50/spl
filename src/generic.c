@@ -39,7 +39,7 @@
 #else
     #define ASSERT_CONCAT_(a, b) a##b
     #define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
-    #define static_assert(pred, _unused) enum { ASSERT_CONCAT(assertion_line, __LINE__) = 1 / (int) pred } // This error means that fuck you
+    #define static_assert(pred, _unused) enum { ASSERT_CONCAT(assertion_line, __LINE__) = 1 / (int) pred }
 #endif
 
 static_assert(sizeof (GPoint) != sizeof (GObject),

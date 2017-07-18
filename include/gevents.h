@@ -31,6 +31,7 @@
 #include "cslib.h"
 #include "generic.h"
 #include "gwindow.h"
+#include <SDL2/SDL_events.h>
 
 /*
  * Type: EventClassType
@@ -44,11 +45,10 @@
 
 typedef enum {
    KEY_EVENT    = 0x010,
-   TIMER_EVENT  = 0x020,
-   WINDOW_EVENT = 0x040,
-   MOUSE_EVENT  = 0x080,
-   CLICK_EVENT  = 0x100,
-   ANY_EVENT    = 0x3F0
+   WINDOW_EVENT = 0x020,
+   MOUSE_EVENT  = 0x040,
+   CLICK_EVENT  = 0x080,
+   ANY_EVENT    = 0x1F0,
 } EventClassType;
 
 /*
@@ -78,14 +78,10 @@ typedef enum {
  */
 
 typedef enum {
-   SHIFT_DOWN     = 1 << 0,
-   CTRL_DOWN      = 1 << 1,
-   META_DOWN      = 1 << 2,
-   ALT_DOWN       = 1 << 3,
-   ALT_GRAPH_DOWN = 1 << 4,
-   BUTTON1_DOWN   = 1 << 5,
-   BUTTON2_DOWN   = 1 << 6,
-   BUTTON3_DOWN   = 1 << 7
+   SHIFT_DOWN     = KMOD_SHIFT,
+   CTRL_DOWN      = KMOD_CTRL,
+   META_DOWN      = KMOD_GUI,
+   ALT_DOWN       = KMOD_ALT,
 } ModifierCodes;
 
 /*
@@ -95,33 +91,33 @@ typedef enum {
  */
 
 typedef enum {
-   BACKSPACE_KEY = 8,
-   TAB_KEY = 9,
-   ENTER_KEY = 10,
-   CLEAR_KEY = 12,
-   ESCAPE_KEY = 27,
-   PAGE_UP_KEY = 33,
-   PAGE_DOWN_KEY = 34,
-   END_KEY = 35,
-   HOME_KEY = 36,
-   LEFT_ARROW_KEY = 37,
-   UP_ARROW_KEY = 38,
-   RIGHT_ARROW_KEY = 39,
-   DOWN_ARROW_KEY = 40,
-   F1_KEY = 112,
-   F2_KEY = 113,
-   F3_KEY = 114,
-   F4_KEY = 115,
-   F5_KEY = 116,
-   F6_KEY = 117,
-   F7_KEY = 118,
-   F8_KEY = 119,
-   F9_KEY = 120,
-   F10_KEY = 121,
-   F11_KEY = 122,
-   F12_KEY = 123,
-   DELETE_KEY = 127,
-   HELP_KEY = 156
+   BACKSPACE_KEY = SDLK_BACKSPACE,
+   TAB_KEY = SDLK_TAB,
+   ENTER_KEY = SDLK_RETURN,
+   CLEAR_KEY = SDLK_CLEAR,
+   ESCAPE_KEY = SDLK_ESCAPE,
+   PAGE_UP_KEY = SDLK_PAGEUP,
+   PAGE_DOWN_KEY = SDLK_PAGEDOWN,
+   END_KEY = SDLK_END,
+   HOME_KEY = SDLK_HOME,
+   LEFT_ARROW_KEY = SDLK_LEFT,
+   UP_ARROW_KEY = SDLK_UP,
+   RIGHT_ARROW_KEY = SDLK_RIGHT,
+   DOWN_ARROW_KEY = SDLK_DOWN,
+   F1_KEY = SDLK_F1,
+   F2_KEY = SDLK_F2,
+   F3_KEY = SDLK_F3,
+   F4_KEY = SDLK_F4,
+   F5_KEY = SDLK_F5,
+   F6_KEY = SDLK_F6,
+   F7_KEY = SDLK_F7,
+   F8_KEY = SDLK_F8,
+   F9_KEY = SDLK_F9,
+   F10_KEY = SDLK_F10,
+   F11_KEY = SDLK_F11,
+   F12_KEY = SDLK_F12,
+   DELETE_KEY = SDLK_DELETE,
+   HELP_KEY = SDLK_HELP
 } KeyCodes;
 
 /*

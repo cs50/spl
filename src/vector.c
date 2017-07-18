@@ -146,6 +146,16 @@ void removeAt(Vector vector, int index)
     removeVector(vector, index);
 }
 
+
+int findVector(Vector vector, void *value)
+{
+    void **vend = vector->elements + vector->count;
+    for (void **vitem = vector->elements; vitem != vend; vitem++) {
+        if (*vitem == value) return vitem - vector->elements;
+    }
+    return -1;
+}
+
 /* Private functions */
 
 static void expandCapacity(Vector vector)

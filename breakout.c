@@ -47,9 +47,6 @@
 // margin above bricks and below paddle
 #define MARGIN 50
 
-// how many milliseconds to wait after ball's moved before moving again
-#define NAPTIME 10
-
 // how many different colors we have for the rows of bricks
 #define NUM_COLORS 5
 
@@ -63,7 +60,8 @@ GObject detectCollision(GWindow window, GOval ball);
 
 int main(int argc, char* argv[])
 {
-    printf("v.3.0\n");
+    printf("Hello, world!\n");
+    fflush(stdout);
 
     // seed pseudorandom number generator
     srand48(time(NULL));
@@ -198,13 +196,13 @@ int main(int argc, char* argv[])
                 }
 
                 // slow down animation
-                /*pause(NAPTIME);*/
+                pause(NAPTIME);
             }
         }
     }
 
     // wait for click before exiting
-    waitForClick();
+    /*waitForClick();*/
 
     // game over
     closeGWindow(window);

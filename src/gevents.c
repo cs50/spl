@@ -70,11 +70,6 @@ EventType getEventType(GEvent e)
     return e->eventType;
 }
 
-void setEventTime(GEvent e, double time)
-{
-    e->event.common.timestamp = time;
-}
-
 double getEventTime(GEvent e)
 {
     return e->event.common.timestamp;
@@ -82,14 +77,11 @@ double getEventTime(GEvent e)
 
 int getModifiers(GEvent e)
 {
-    (void) e;
-    return 0;
-}
+    if (!(e->eventType & KEY_EVENT)) {
+        error("getKeyChar: Illegal event type");
+    }
 
-void setModifiers(GEvent e, int modifiers)
-{
-    (void) e;
-    (void) modifiers;
+    return e->event.key.keysym.mod;
 }
 
 void waitForClick()
@@ -97,14 +89,58 @@ void waitForClick()
     freeEvent(waitForEvent(CLICK_EVENT));
 }
 
+
+static bool is_wrapper(int ch, int (*is_fn)(int))
+{
+    return ch >= 0 && ch < UCHAR_MAX && is_fn(ch);
+}
+
+static bool isValidKey(SDL_Event const *e)
+{
+    int ch = e->key.keysym.sym;
+    switch (ch)
+    {
+    case SDLK_BACKSPACE:
+    case SDLK_TAB:
+    case SDLK_RETURN:
+    case SDLK_CLEAR:
+    case SDLK_ESCAPE:
+    case SDLK_PAGEUP:
+    case SDLK_PAGEDOWN:
+    case SDLK_END:
+    case SDLK_HOME:
+    case SDLK_LEFT:
+    case SDLK_RIGHT:
+    case SDLK_UP:
+    case SDLK_DOWN:
+    case SDLK_F1:
+    case SDLK_F2:
+    case SDLK_F3:
+    case SDLK_F4:
+    case SDLK_F5:
+    case SDLK_F6:
+    case SDLK_F7:
+    case SDLK_F8:
+    case SDLK_F9:
+    case SDLK_F10:
+    case SDLK_F11:
+    case SDLK_F12:
+    case SDLK_DELETE:
+    case SDLK_HELP:
+        return true;
+    default:
+        return is_wrapper(e->key.keysym.sym, isprint);
+    }
+}
+
 typedef enum {
     Disabled,
     Press,
     Release,
-} ClickState;
+} ButtonState;
 
 // TODO: support more events
-static int mapSDLType(SDL_Event const *e, ClickState *state)
+static int mapSDLType(SDL_Event const *e, ButtonState *click, ButtonState *key)
 {
     switch (e->type) {
     case SDL_WINDOWEVENT:
@@ -116,16 +152,23 @@ static int mapSDLType(SDL_Event const *e, ClickState *state)
         default:
             return -1;
         }
+    case SDL_KEYDOWN:
+        if (!isValidKey(e)) return -1;
+        if (*key == Press) *key = Release;
+        return KEY_PRESSED;
+    case SDL_KEYUP:
+        if (!isValidKey(e)) return -1;
+        return *key == Release ? KEY_TYPED : KEY_RELEASED;
     case SDL_MOUSEMOTION:
         if (e->motion.state & SDL_BUTTON_LMASK) return MOUSE_DRAGGED;
         else return MOUSE_MOVED;
     case SDL_MOUSEBUTTONDOWN:
         if (e->button.button == SDL_BUTTON_LEFT) {
-            if (*state == Press) *state = Release;
+            if (*click == Press) *click = Release;
             return MOUSE_PRESSED;
         } else return -1;
     case SDL_MOUSEBUTTONUP:
-        if (e->button.button == SDL_BUTTON_LEFT) return *state == Release ? CLICK_EVENT : MOUSE_RELEASED;
+        if (e->button.button == SDL_BUTTON_LEFT) return *click == Release ? CLICK_EVENT : MOUSE_RELEASED;
         else return -1;
     case SDL_QUIT:
         exit(0);
@@ -139,8 +182,8 @@ static int eventFilter(void *user_data, SDL_Event *e)
 {
     (void) user_data;
     // Not really necessary, but required by mapSDLType
-    ClickState c = Disabled;
-    return mapSDLType(e, &c) != -1;
+    ButtonState c = Disabled, k = Disabled;
+    return mapSDLType(e, &c, &k) != -1;
 }
 
 static void setFilter(SDL_EventFilter new_filter)
@@ -157,19 +200,26 @@ static inline bool has_click(int mask)
 {
     return mask & CLICK_EVENT && SDL_HasEvent(SDL_MOUSEBUTTONDOWN) && SDL_HasEvent(SDL_MOUSEBUTTONUP);
 }
+
 static inline bool has_win(int mask)
 {
     return mask & WINDOW_EVENT && SDL_HasEvent(SDL_WINDOWEVENT);
 }
+
 static inline bool has_mouse(int mask)
 {
     return mask & MOUSE_EVENT && SDL_HasEvents(SDL_MOUSEMOTION, SDL_MOUSEBUTTONUP);
 }
 
+static inline bool has_key(int mask)
+{
+    return mask & KEY_EVENT && SDL_HasEvents(SDL_KEYDOWN, SDL_KEYUP);
+}
+
 static inline bool has_event(int mask)
 {
     SDL_PumpEvents();
-    return has_click(mask) || has_win(mask) || has_mouse(mask);
+    return has_click(mask) || has_win(mask) || has_mouse(mask) || has_key(mask);
 }
 
 static GEvent eventAction(int mask, int (*ev_fn)(SDL_Event*))
@@ -177,12 +227,24 @@ static GEvent eventAction(int mask, int (*ev_fn)(SDL_Event*))
     requiresSubsystem(SDL_INIT_EVENTS);
     setFilter(eventFilter);
 
-    ClickState state = mask & CLICK_EVENT ? Press : Disabled;
+    // The mask can either be a composite of event classes or a single event
+    // type. Determine which we are and error if we're both
+    bool composite = true;
+    if (mask & EVENT_SUBTYPE_MASK) { 
+        composite = false;
+        if (__builtin_popcount(getEventClassOp(mask)) > 1) {
+            error("GEvents: Mask must either be the sum of event classes or a single event type");
+        }
+    }
+
+    ButtonState click = mask & CLICK_EVENT ? Press : Disabled,
+                key = mask & KEY_PRESSED ? Press : Disabled;
+
     GEvent ret = NULL;
     SDL_Event e;
     while (ev_fn(&e)) {
-        int type = mapSDLType(&e, &state);
-        if (type != -1 && getEventClassOp(type) & mask) {
+        int type = mapSDLType(&e, &click, &key);
+        if (type != -1 && ((composite && type & mask) || type == mask)) {
             ret = newBlock(GEvent);
             // Compensate for the fact that MOUSE_CLICKED is not in the
             // CLICK_EVENT class because reasons
@@ -221,51 +283,8 @@ void freeEvent(GEvent e)
     freeBlock(e);
 }
 
-GEvent newGWindowEvent(EventType type, GWindow gw)
-{
-    GEvent e = newBlock(GEvent);
-    e->eventType = type;
-    return e;
-}
-
-/*
- * Function: newGMouseEvent
- * Usage: e = newGMouseEvent(type, gw, x, y);
- * ------------------------------------------
- * Creates a <code>GEvent</code> of the <code>MOUSE_EVENT</code> class.
- * The parameters are the specific event type, the <code>GWindow</code>
- * in which the event occurred, and the coordinates of the mouse.
- */
-
-GEvent newGMouseEvent(EventType type, GWindow gw, double x, double y)
-{
-    GEvent e;
-
-    e = newBlock(GEvent);
-    e->eventType = type;
-    /*e->gw = gw;*/
-    /*e->x = x;*/
-    /*e->y = y;*/
-    return e;
-}
-
-GEvent newGKeyEvent(EventType type, GWindow gw, int keyChar, int keyCode)
-{
-    GEvent e;
-
-    e = newBlock(GEvent);
-    e->eventType = type;
-    /*e->gw = gw;*/
-    /*e->keyChar = keyChar;*/
-    /*e->keyCode = keyCode;*/
-    return e;
-}
-
 GWindow getGWindow(GEvent e)
 {
-    if (e->eventType & (WINDOW_EVENT | MOUSE_EVENT | KEY_EVENT)) {
-        /*return e->gw;*/
-    }
     error("getGWindow: Illegal event type");
 }
 
@@ -293,18 +312,25 @@ double getYGEvent(GEvent e)
     error("getY: Illegal event type");
 }
 
-char getKeyChar(GEvent e)
-{
-    /*if (e->eventType & KEY_EVENT) {*/
-    /*return e->keyChar;*/
-    /*}*/
-    error("getKeyChar: Illegal event type");
-}
-
 int getKeyCode(GEvent e)
 {
-    /*if (e->eventType & KEY_EVENT) {*/
-    /*return e->keyCode;*/
-    /*}*/
-    error("getKeyCode: Illegal event type");
+    if (!(e->eventType & KEY_EVENT)) {
+        error("getKeyCode: Illegal event type");
+    }
+
+    return e->event.key.keysym.sym;
+
+}
+
+char getKeyChar(GEvent e)
+{
+    if (!(e->eventType & KEY_EVENT)) {
+        error("getKeyChar: Illegal event type");
+    }
+    int c = getKeyCode(e);
+    return is_wrapper(c, isprint)
+        ? getModifiers(e) & SHIFT_DOWN
+            ? toupper(c)
+            : c
+        : '\0';
 }

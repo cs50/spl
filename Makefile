@@ -30,17 +30,17 @@ $(shell `mkdir -p $(OBJDIR) $(BCDIR)`)
 .PHONY: all
 all: $(TARGET)
 
-breakout_native: $(TARGET) breakout.c
-	$(CC) -L. $(CFLAGS) -o breakout $^ $(LDFLAGS) -l$(NAME) -lSDL2main
+native: $(TARGET) breakout.c
+	$(CC) -L. -DNAPTIME=8 $(CFLAGS) -o breakout $^ $(LDFLAGS) -l$(NAME) -lSDL2main
 
 
 $(TARGET): $(OBJS)
 	$(CC) -shared $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-breakout: $(SRCS) $(GFX) breakout.c $(INCS) Makefile
+web: $(SRCS) $(GFX) breakout.c $(INCS) Makefile
 	$(EMCC) -MMD $(EMCFLAGS) $(GFX) -o $(BCDIR)/libSDL2_gfx.bc
 	$(EMCC) -MMD $(EMCFLAGS) $(SRCS) -o $(BCDIR)/libspl.bc
-	$(EMCC) -s EMTERPRETIFY_FILE=\'$@.bin\' $(EMCFLAGS) -o $@.js breakout.c $(BCDIR)/libspl.bc $(BCDIR)/libSDL2_gfx.bc
+	$(EMCC) -DNAPTIME=0 -s EMTERPRETIFY_FILE=\'breakout.bin\' $(EMCFLAGS) -o breakout.js breakout.c $(BCDIR)/libspl.bc $(BCDIR)/libSDL2_gfx.bc
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCS) Makefile
 	$(CC) $(CFLAGS) -MMD -c -o $@ $< $(LDFLAGS)

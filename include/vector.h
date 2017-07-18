@@ -173,5 +173,6 @@ void sendBackwardVector(Vector vector, int index);
 void sendToBackVector(Vector vector, int index);
 void sendForwardVector(Vector vector, int index);
 void sendToFrontVector(Vector vector, int index);
+int findVector(Vector vector, void *value);
 
 #endif
