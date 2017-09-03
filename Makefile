@@ -4,9 +4,8 @@ NAME = spl
 CC = gcc
 
 EMSCRIPTEN_ROOT ?= /usr/lib/emscripten
-
 EMCC = $(EMSCRIPTEN_ROOT)/emcc
-ENCONF = $(EMSCRIPTEN_ROOT)/emconfigure
+EMCONF = $(EMSCRIPTEN_ROOT)/emconfigure
 
 SDLINC = /usr/include/SDL2
 CFLAGS = -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-parameter -pipe -D_XOPEN_SOURCE=500 -std=c11 -fPIC -I$(INCDIR) -I$(SDLINC)  -ggdb3 -O0
@@ -21,6 +20,7 @@ SRCS = $(SRCDIR)/typemap.c $(wildcard $(SRCDIR)/*.c)
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 GFX_DIR = SDL2_gfx-1.0.3
+GFX_TAR = $(addsuffix .tar, $(GFX_DIR))
 GFX_LIB_DIR = $(GFX_DIR)/.libs
 GFX = $(GFX_LIB_DIR)/libSDL2_gfx.a
 
@@ -53,7 +53,10 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCS) Makefile
 $(SRCDIR)/typemap.c: $(SRCDIR)/typemap.gperf
 	gperf --ignore-case -N"in_type_set" -F",UNKNOWN" -Ct  $^  --output-file $@
 
-$(GFX): 
+$(GFX_DIR): $(GFX_TAR)
+	tar xvf $(GFX_TAR)
+
+$(GFX): $(GFX_DIR)
 	cd $(GFX_DIR); EMCONFIGURE_JS=1 $(EMCONF) ./configure --disable-mmx
 	$(MAKE) -C $(GFX_DIR) all
     
