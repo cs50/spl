@@ -37,9 +37,12 @@ all: $(TARGET)
 native: $(TARGET) breakout.c
 	$(CC) -L. -DNAPTIME=8 $(CFLAGS) -o breakout $^ $(LDFLAGS) -l$(NAME) -lSDL2main
 
-
 $(TARGET): $(OBJS)
 	$(CC) -shared $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+browser: web
+	FLASK_APP=server.py flask run 
+
 
 web: $(SRCS) $(GFX) breakout.c $(INCS) Makefile
 	$(EMCC) -MMD $(EMCFLAGS) $(GFX) -o $(BCDIR)/libSDL2_gfx.bc
@@ -53,10 +56,10 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCS) Makefile
 $(SRCDIR)/typemap.c: $(SRCDIR)/typemap.gperf
 	gperf --ignore-case -N"in_type_set" -F",UNKNOWN" -Ct  $^  --output-file $@
 
-$(GFX_DIR): $(GFX_TAR)
+$(GFX_DIR)/configure: $(GFX_TAR)
 	tar xvf $(GFX_TAR)
 
-$(GFX): $(GFX_DIR)
+$(GFX): $(GFX_DIR)/configure
 	cd $(GFX_DIR); EMCONFIGURE_JS=1 $(EMCONF) ./configure --disable-mmx
 	$(MAKE) -C $(GFX_DIR) all
     
@@ -67,5 +70,5 @@ $(GFX): $(GFX_DIR)
 .PHONY: clean
 clean:
 	rm -f core $(TARGET) src/color.c src/typemap.c breakout vgcore.*
-	rm -f -r $(OBJDIR) $(BCDIR)
+	rm -f -r $(OBJDIR) $(BCDIR) $(GFX_DIR)
 	rm -f breakout.{js,wasm,data,bin,mem}

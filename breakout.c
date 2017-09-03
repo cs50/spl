@@ -196,13 +196,13 @@ int main(int argc, char* argv[])
                 }
 
                 // slow down animation
-                pause(NAPTIME);
+                /*pause(NAPTIME);*/
             }
         }
     }
 
     // wait for click before exiting
-    /*waitForClick();*/
+    waitForClick();
 
     // game over
     closeGWindow(window);
