@@ -2,8 +2,12 @@
 
 NAME = spl
 CC = gcc
-EMCC = /usr/lib/emscripten/emcc
-EMCONF = /usr/lib/emscripten/emconfigure
+
+EMSCRIPTEN_ROOT ?= /usr/lib/emscripten
+
+EMCC = $(EMSCRIPTEN_ROOT)/emcc
+ENCONF = $(EMSCRIPTEN_ROOT)/emconfigure
+
 SDLINC = /usr/include/SDL2
 CFLAGS = -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-parameter -pipe -D_XOPEN_SOURCE=500 -std=c11 -fPIC -I$(INCDIR) -I$(SDLINC)  -ggdb3 -O0
 TARGET = lib$(NAME).so

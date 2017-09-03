@@ -62,18 +62,8 @@ struct GWindowCDT {
 
 GWindow newGWindow(double width, double height)
 {
-
     requiresSubsystem(SDL_INIT_VIDEO);
-
-    size_t idx = 0;
-    for (; idx != MAX_WIN; idx++) {
-    }
-
-    if (win == WIN_END) {
-        error("newGWindow: maximum number of windows created");
-    }
-
-    GWindow gw = *win = newBlock(GWindow);
+    GWindow gw = newBlock(GWindow);
     gw->contents = newGCompound();
     setWindow(gw->contents, gw);
     SDL_CreateWindowAndRenderer(width, height, 0, &gw->win, &gw->ren);
