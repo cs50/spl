@@ -24,7 +24,7 @@ GFX_TAR = $(addsuffix .tar, $(GFX_DIR))
 GFX_LIB_DIR = $(GFX_DIR)/.libs
 GFX = $(GFX_LIB_DIR)/libSDL2_gfx.a
 
-EMCFLAGS = -s TOTAL_MEMORY=67108864 -O3 -I $(GFX_DIR) -I $(INCDIR) -s AGGRESSIVE_VARIABLE_ELIMINATION=1 -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 -s USE_SDL=2 -s USE_SDL_TTF=2 --preload-file assets -s WASM=1
+EMCFLAGS = -s TOTAL_MEMORY=67108864 -O3 -I $(GFX_DIR) -I $(INCDIR) -s AGGRESSIVE_VARIABLE_ELIMINATION=1 -s EMTERPRETIFY=1 -s EMTERPRETIFY_WHITELIST='["_getNextEvent", "_waitForEvent", "_main", "_pause_", "_waitForClick"]' -s EMTERPRETIFY_ASYNC=1 -s USE_SDL=2 -s USE_SDL_TTF=2 --preload-file assets -s WASM=1
 
 
 LDFLAGS = -lSDL2 -lSDL2_ttf -lSDL2_gfx
@@ -43,15 +43,13 @@ $(TARGET): $(OBJS)
 browser: web
 	FLASK_APP=server.py flask run 
 
-
 web: $(SRCS) $(GFX) breakout.c $(INCS) Makefile
 	$(EMCC) -MMD $(EMCFLAGS) $(GFX) -o $(BCDIR)/libSDL2_gfx.bc
 	$(EMCC) -MMD $(EMCFLAGS) $(SRCS) -o $(BCDIR)/libspl.bc
-	$(EMCC) -DNAPTIME=0 -s EMTERPRETIFY_FILE=\'breakout.bin\' $(EMCFLAGS) -o breakout.js breakout.c $(BCDIR)/libspl.bc $(BCDIR)/libSDL2_gfx.bc
+	$(EMCC) -DNAPTIME=4 -s EMTERPRETIFY_FILE=\'breakout.bin\' $(EMCFLAGS) -o breakout.js breakout.c $(BCDIR)/libspl.bc $(BCDIR)/libSDL2_gfx.bc
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCS) Makefile
 	$(CC) $(CFLAGS) -MMD -c -o $@ $< $(LDFLAGS)
-
 
 $(SRCDIR)/typemap.c: $(SRCDIR)/typemap.gperf
 	gperf --ignore-case -N"in_type_set" -F",UNKNOWN" -Ct  $^  --output-file $@

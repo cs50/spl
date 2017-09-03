@@ -10,5 +10,5 @@ breakout.js
 
 obj/*
 bc/*
-SDL_gfx-1.0.3/*
+SDL2_gfx-1.0.3/*
 __pycache__

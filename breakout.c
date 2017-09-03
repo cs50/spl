@@ -60,7 +60,7 @@ GObject detectCollision(GWindow window, GOval ball);
 
 int main(int argc, char* argv[])
 {
-    printf("Hello, world!\n");
+    printf("version 4.0\n");
     fflush(stdout);
 
     // seed pseudorandom number generator
@@ -119,11 +119,9 @@ int main(int argc, char* argv[])
         {
     
             // check for mouse event
-            /*GEvent e = getNextEvent(MOUSE_EVENT);*/
             GEvent e = getNextEvent(MOUSE_EVENT);
 
             // if we heard one
-            
             if (e != NULL)
             {
                 // if the event was movement
@@ -196,7 +194,7 @@ int main(int argc, char* argv[])
                 }
 
                 // slow down animation
-                /*pause(NAPTIME);*/
+                pause(NAPTIME);
             }
         }
     }

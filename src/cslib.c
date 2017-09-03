@@ -73,6 +73,7 @@ void *getBlock(size_t nbytes, unsigned char type)
 
 void freeBlock(void *ptr)
 {
+    if (!ptr) return;
     BlockHeader *base = (BlockHeader *) ((char *) ptr - sizeof(BlockHeader));
     if (base->magic == MAGIC) {
         base->magic = 0;
