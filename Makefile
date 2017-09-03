@@ -41,7 +41,7 @@ $(TARGET): $(OBJS)
 	$(CC) -shared $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 browser: web
-	FLASK_APP=server.py flask run 
+	FLASK_APP=application.py flask run 
 
 web: $(SRCS) $(GFX) breakout.c $(INCS) Makefile
 	$(EMCC) -MMD $(EMCFLAGS) $(GFX) -o $(BCDIR)/libSDL2_gfx.bc
