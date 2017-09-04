@@ -285,7 +285,7 @@ void freeEvent(GEvent e)
 
 GWindow getGWindow(GEvent e)
 {
-    error("getGWindow: Illegal event type");
+    error("getGWindow: unimplemeted");
 }
 
 double getXGEvent(GEvent e)

@@ -10,11 +10,11 @@ EMCONF = $(EMSCRIPTEN_ROOT)/emconfigure
 SDLINC = /usr/include/SDL2
 CFLAGS = -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-parameter -pipe -D_XOPEN_SOURCE=500 -std=c11 -fPIC -I$(INCDIR) -I$(SDLINC)  -ggdb3 -O0
 TARGET = lib$(NAME).so
+WEBTARGET = lib$(NAME).bc
 
 SRCDIR  = src
 OBJDIR  = obj
 INCDIR  = include
-BCDIR   = bc
 
 SRCS = $(SRCDIR)/typemap.c $(wildcard $(SRCDIR)/*.c)
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
@@ -24,12 +24,12 @@ GFX_TAR = $(addsuffix .tar, $(GFX_DIR))
 GFX_LIB_DIR = $(GFX_DIR)/.libs
 GFX = $(GFX_LIB_DIR)/libSDL2_gfx.a
 
-EMCFLAGS = -s TOTAL_MEMORY=67108864 -O3 -I $(GFX_DIR) -I $(INCDIR) -s AGGRESSIVE_VARIABLE_ELIMINATION=1 -s EMTERPRETIFY=1 -s EMTERPRETIFY_WHITELIST='["_getNextEvent", "_waitForEvent", "_main", "_pause_", "_waitForClick"]' -s EMTERPRETIFY_ASYNC=1 -s USE_SDL=2 -s USE_SDL_TTF=2 --preload-file assets -s WASM=1
+EMCFLAGS = -O3 -I $(INCDIR) -s AGGRESSIVE_VARIABLE_ELIMINATION=1 -s USE_SDL=2 -s USE_SDL_TTF=2
 
 
 LDFLAGS = -lSDL2 -lSDL2_ttf -lSDL2_gfx
 
-$(shell `mkdir -p $(OBJDIR) $(BCDIR)`)
+$(shell `mkdir -p $(OBJDIR)`)
 
 .PHONY: all
 all: $(TARGET)
@@ -37,16 +37,30 @@ all: $(TARGET)
 native: $(TARGET) breakout.c
 	$(CC) -L. -DNAPTIME=8 $(CFLAGS) -o breakout $^ $(LDFLAGS) -l$(NAME) -lSDL2main
 
-$(TARGET): $(OBJS)
-	$(CC) -shared $(CFLAGS) -o $@ $^ $(LDFLAGS)
+web: $(WEBTARGET) breakout.c
+	$(EMCC) \
+	    $(EMCFLAGS) \
+	    -DNAPTIME=1 \
+	    -s EMTERPRETIFY=1 \
+	    -s EMTERPRETIFY_WHITELIST='["_getNextEvent", "_pause_", "_waitForClick", "_main"]' \
+	    -s EMTERPRETIFY_ASYNC=1 \
+	    -s EMTERPRETIFY_FILE=\'breakout.bin\' \
+	    -s TOTAL_MEMORY=67108864 \
+	    -s WASM=1 \
+	    --preload-file assets \
+	    -o breakout.js \
+	    $^
 
 browser: web
 	FLASK_APP=application.py flask run 
 
-web: $(SRCS) $(GFX) breakout.c $(INCS) Makefile
-	$(EMCC) -MMD $(EMCFLAGS) $(GFX) -o $(BCDIR)/libSDL2_gfx.bc
-	$(EMCC) -MMD $(EMCFLAGS) $(SRCS) -o $(BCDIR)/libspl.bc
-	$(EMCC) -DNAPTIME=4 -s EMTERPRETIFY_FILE=\'breakout.bin\' $(EMCFLAGS) -o breakout.js breakout.c $(BCDIR)/libspl.bc $(BCDIR)/libSDL2_gfx.bc
+$(TARGET): $(OBJS)
+	$(CC) -shared $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+
+$(WEBTARGET): $(SRCS) $(GFX) $(INCS) Makefile
+	$(EMCC) $(EMCFLAGS) -I $(GFX_DIR) $(SRCS) $(GFX) -o libspl.bc
+
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCS) Makefile
 	$(CC) $(CFLAGS) -MMD -c -o $@ $< $(LDFLAGS)
@@ -63,10 +77,9 @@ $(GFX): $(GFX_DIR)/configure
     
 
 -include $(wildcard $(OBJDIR)/*.d)
--include $(wildcard $(BCDIR)/*.d)
 
 .PHONY: clean
 clean:
-	rm -f core $(TARGET) src/color.c src/typemap.c breakout vgcore.*
-	rm -f -r $(OBJDIR) $(BCDIR) $(GFX_DIR)
+	rm -f core $(TARGET) $(WEBTARGET) src/color.c src/typemap.c breakout vgcore.*
+	rm -f -r $(OBJDIR) $(GFX_DIR)
 	rm -f breakout.{js,wasm,data,bin,mem}
